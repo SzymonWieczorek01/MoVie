@@ -1,29 +1,13 @@
 <!DOCTYPE html>
-<html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aplikacja Vue</title>
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Movie App</title>
+</head>
+<body>
     <div id="app"></div>
+    <!-- Vite will automatically inject built scripts here -->
     <script type="module" src="/src/main.js"></script>
-  </body>
-<script>
-  async function fetchMovies(){
-    movie_data = []
-    parsed_id = []
-    for (i=1; i<=100; i++){
-      response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${i}`)
-      unpackedResponse = await response.json()
-      movie_data = await movie_data.concat(unpackedResponse["results"])
-    }
-    for (i=0; i<movie_data.length; i++){
-      parsed_id.push(movie_data[i].id)
-    }
-    console.log(parsed_id)
-  }
-  fetchMovies()
-</script>
+</body>
 </html>
