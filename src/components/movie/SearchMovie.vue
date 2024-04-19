@@ -28,7 +28,6 @@ export default {
       this.$store.commit('setSearchQuery', this.query);
       this.$store.commit('setWithGenres', this.with_genres);
       this.$store.commit('setYear', this.year);
-      console.log(this.searchResults[0])
       this.$router.push({ name: 'Search Results', query: { q: this.query, with_genres: this.with_genres, year: this.year}});
       this.performSearch();
     },

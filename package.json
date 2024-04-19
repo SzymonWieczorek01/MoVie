@@ -12,6 +12,7 @@
     "vue": "^3.2.47",
     "vue-router": "^4.3.0",
     "vue3-touch-events": "^4.1.8",
+    "vue3-youtube": "^0.1.9",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
