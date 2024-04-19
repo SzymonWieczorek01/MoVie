@@ -7,7 +7,7 @@ export default createStore({
       query: '',
       searchResults: [],
       with_genres: 0,
-      year: '',
+      year: 0,
       movies: [],
       currentPage: 1,
       totalPages: null

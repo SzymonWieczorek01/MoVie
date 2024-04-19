@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1>Search Results for "{{ query }}" </h1>
+    <h1>Search Results for "{{ query }}"</h1>
     <ul>
       <li v-for="result in searchResults" :key="result.id">
-        <h1>{{ result.title }}</h1><p>{{ result.release_date }}</p>
+        <img :src="'https://image.tmdb.org/t/p/w500' + result.poster_path" alt="Movie Poster">
+        <h1>{{ result.title }}</h1>
+        <p>{{ result.release_date }}</p>
         <h4>{{ result.overview }}</h4>
         <h4>Genres: {{ genreNames(result.genre_ids) }}</h4>
       </li>
@@ -15,16 +17,23 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  props: {
-    query: String,
-    with_genres: Number,
-    year: Number
+  watch: {
+    '$route.query': {
+      handler(newQuery) {
+        this.$store.commit('setSearchQuery', newQuery.q || '');
+        this.$store.commit('setWithGenres', newQuery.with_genres ? parseInt(newQuery.with_genres) : 0);
+        this.$store.commit('setYear', newQuery.year ? parseInt(newQuery.year) : 0);
+        this.performSearch();
+      },
+      immediate: true,
+      deep: true
+    },
   },
   computed: {
-    ...mapState(['searchResults']),
-    ...mapState(['genres'])
+    ...mapState(['searchResults', 'genres', 'query', 'with_genres', 'year'])
   },
   methods: {
+    ...mapActions(['performSearch']),
     genreNames(genreIds) {
       return genreIds
         .map(id => {

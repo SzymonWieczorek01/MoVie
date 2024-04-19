@@ -1,6 +1,6 @@
 <template>
   <div class="movie-card">
-    <img :src="movie.poster" alt="Movie Poster" class="movie-poster" />
+    <img v-bind:src="'https://image.tmdb.org/t/p/w500'+movie.poster_path" alt="Movie Poster" class="movie-poster" />
     <h3>{{ movie.title }}</h3>
     <p>{{ movie.summary }}</p>
     <button @click="$emit('swipe', 'like')">Like</button>
