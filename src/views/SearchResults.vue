@@ -4,7 +4,7 @@
     <ul>
       <li v-for="result in searchResults" :key="result.id">
         <img :src="'https://image.tmdb.org/t/p/w500' + result.poster_path" alt="Movie Poster">
-        <h1>{{ result.title }}</h1>
+        <h1 @click="redirectToMovie(result.id)">{{ result.title }}</h1>
         <p>{{ result.release_date }}</p>
         <h4>{{ result.overview }}</h4>
         <h4>Genres: {{ genreNames(result.genre_ids) }}</h4>
@@ -41,6 +41,9 @@ export default {
           return genre ? genre.name : 'Unknown';
         })
         .join(', ');
+    },
+    redirectToMovie(id) {
+      this.$router.push({ name: 'Movie Item', query: { id: id}});
     }
   }
 }
