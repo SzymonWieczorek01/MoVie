@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading-component/>
     <navbar />
     <router-view/>
     <footer-component />
@@ -7,6 +8,7 @@
 </template>
 
 <script>
+    import LoadingComponent from './components/layout/Loading.vue';
     import Navbar from './components/layout/Navbar.vue'
     import FooterComponent from './components/layout/Footer.vue'
     import {ref, onBeforeMount} from 'vue'
@@ -14,7 +16,8 @@
     export default {
     components: {
             Navbar,
-            FooterComponent
+            FooterComponent,
+            LoadingComponent
         }
     }
 </script>

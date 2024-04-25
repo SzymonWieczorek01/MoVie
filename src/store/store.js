@@ -8,12 +8,18 @@ export default createStore({
       searchResults: [],
       with_genres: 0,
       year: 0,
+      isLoading: false,
       movies: [],
-      currentPage: 1,
-      totalPages: null
+      currentSwipePage: 1,
+      currentSearchPage: 1,
+      swipeTotalPages: 0,
+      searchTotalPages: 0
     };
   },
   mutations: {
+    setLoading(state, isLoading) {
+      state.isLoading = isLoading;
+    },
     setSearchQuery(state, query) {
       state.query = query;
     },
@@ -29,13 +35,19 @@ export default createStore({
     setMovies(state, movies) {
       state.movies.push(...movies);
     },
-    incrementPage(state) {
-      if (!state.totalPages || state.currentPage < state.totalPages) {
-        state.currentPage++;
+    incrementSwipePage(state) {
+      if (!state.swipeTotalPages || state.currentSwipePage < state.swipeTotalPages) {
+        state.currentSwipePage++;
       }
     },
-    setTotalPages(state, pages) {
-      state.totalPages = pages;
+    setSearchPage(state, page) {
+      state.currentSearchPage = parseInt(page);
+    },
+    setSearchTotalPages(state, pages){
+      state.searchTotalPages = parseInt(pages);
+    },
+    setTotalSwipePages(state, pages) {
+      state.swipeTotalPages = parseInt(pages);
     },
     setAllowedGenres(state, genres) {
       state.genres = genres;
@@ -43,15 +55,19 @@ export default createStore({
   },
   actions: {
     fetchMovies({ commit, state }) {
-      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${state.currentPage}`)
+      commit('setLoading', true);
+      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${state.currentSwipePage}`)
         .then(response => response.json())
         .then(data => {
           commit('setMovies', data.results);
-          commit('setTotalPages', data.total_pages);
-          commit('incrementPage');
+          commit('setTotalSwipePages', data.total_pages);
+          commit('incrementSwipePage');
         })
         .catch(error => {
           console.error('Error fetching movies:', error);
+        })
+        .finally(() => {
+          commit('setLoading', false);
         })
       
     },
@@ -65,22 +81,26 @@ export default createStore({
         })
     },
     performSearch({ commit, state }) {
+      commit('setLoading', true);
       if (state.query != '') {
-        var link = `https://api.themoviedb.org/3/search/movie?&page=1&query=${state.query}&api_key=67cdbbd1a17bf16dff493523ff9c18d4`
+        var link = `https://api.themoviedb.org/3/search/movie?&page=${state.currentSearchPage}&query=${state.query}&api_key=67cdbbd1a17bf16dff493523ff9c18d4`
       }
       else if (state.with_genres) {
-        var link = `https://api.themoviedb.org/3/discover/movie?page=1&api_key=67cdbbd1a17bf16dff493523ff9c18d4&with_genres=${state.with_genres}`
+        var link = `https://api.themoviedb.org/3/discover/movie?&page=${state.currentSearchPage}&api_key=67cdbbd1a17bf16dff493523ff9c18d4&with_genres=${state.with_genres}`
       }
       else {
-        var link = `https://api.themoviedb.org/3/discover/movie?&page=1&api_key=67cdbbd1a17bf16dff493523ff9c18d4`
+        var link = `https://api.themoviedb.org/3/discover/movie?&page=${state.currentSearchPage}&api_key=67cdbbd1a17bf16dff493523ff9c18d4`
       }
       link = link + `&primary_release_year=${state.year}`
       fetch(link)
         .then(response => response.json())
         .then(data => {
+          commit('setSearchTotalPages', data.total_pages);
           commit('setSearchResults', data.results);
         }).catch(error => {
         console.error('Error fetching movies:', error);
+      }).finally(() => {
+        commit('setLoading', false);
       })
     }
   }
