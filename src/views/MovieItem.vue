@@ -13,6 +13,9 @@
         <p><strong>Genres:</strong> {{ genres }}</p>
         <p><strong>Origin Countries:</strong> {{ originCountries }}</p>
       </div>
+      <button class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
+      <add-opinion v-if="showModal" :show-modal="showModal" :movie-title="movieTitle" @close="showModal = false" @submit="handleOpinionSubmit"></add-opinion>
+      <button class="opinion-button" @click="showModal = true">Add Opinion</button>
     </div>
     <YouTube 
       :src="youtubeLink"
@@ -20,6 +23,7 @@
       ref="youtube"
       class="youtube-player"/>
   </div>
+  
 </template>
 
 
@@ -27,13 +31,15 @@
 import { mapState, mapActions } from 'vuex';
 import { defineComponent, ref, onMounted, watch } from 'vue';
 import YouTube from 'vue3-youtube';
+import AddOpinion from "../components/movie/AddOpinion.vue";
 
-export default defineComponent({
+export default {
   name: 'MovieItem',
-  components: { YouTube },
+  components: { YouTube, AddOpinion },
   data () {
     return {
         movieId: 0,
+        showModal: false,
         movieOriginalTitle: '',
         movieTitle: '',
         movieSummary: '',
@@ -58,6 +64,15 @@ export default defineComponent({
   methods: {
     onReady() {
         this.getYoutubeKey();
+    },
+    addToWatchList() {
+      // Logic to add the movie to the watch list
+      console.log(`Added ${this.movieTitle} to watch list`);
+    },
+    handleOpinionSubmit() {
+      // Logic to handle the opinion submission
+      console.log(`Opinion submitted for ${this.movieTitle}`);
+      this.showModal = false;
     },
     getMovieData () {
       this.$store.commit('setLoading', true);
@@ -97,7 +112,7 @@ export default defineComponent({
         });
     }
   }
-});
+};
 </script>
 
 <style scoped>
@@ -146,5 +161,24 @@ export default defineComponent({
   margin-top: 20px;
   width: 100%;
   max-width: 720px;
+}
+
+.watch-list-button, .opinion-button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.watch-list-button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.opinion-button {
+  background-color: #008CBA; /* Blue */
+  color: white;
 }
 </style>
