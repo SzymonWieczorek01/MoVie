@@ -28,12 +28,12 @@ export default {
       this.$store.commit('setSearchQuery', this.query);
       this.$store.commit('setWithGenres', this.with_genres);
       this.$store.commit('setYear', this.year);
-      this.$router.push({ name: 'Search Results', query: { q: this.query, with_genres: this.with_genres, year: this.year}});
+      this.$router.push({ name: 'Search Results', query: { q: this.query, with_genres: this.with_genres, year: this.year, page: 1}});
       this.performSearch();
     },
   },
   computed: {
-    ...mapState(['searchQuery', 'genres', "searchResults"])
+    ...mapState(['searchQuery', 'genres', "searchResults", 'currentSearchPage'])
   },
   created () {
     this.fetchGenres();

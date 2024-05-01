@@ -5,16 +5,19 @@
       :movie="currentMovie"
       @swipe="handleSwipe"
     />
-  </div>
+    <add-opinion v-if="currentMovie" v-model:showModal="showModal" :movieTitle="currentMovie.title" @submit="submitOpinion" @close="closeOpinion"></add-opinion>
+    </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import AddOpinion from "./AddOpinion.vue";
 import MovieCard from './MovieCard.vue';
 
 export default {
   components: {
-    MovieCard
+    MovieCard,
+    AddOpinion
   },
   computed: {
     ...mapState(['movies']),
@@ -27,24 +30,33 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0
+      currentIndex: 0,
+      showModal: false,
     };
   },
   methods: {
     ...mapActions(['fetchMovies']),
+    closeOpinion() {
+      this.showModal = false;
+    },
+    submitOpinion () {
+      this.showModal = false;
+      this.currentIndex++
+    },
     handleSwipe(direction) {
         console.log(this.movies[this.currentIndex])
         if (this.currentIndex < this.movies.length - 1){
             if (direction == "like"){
                 console.log(`${this.movies[this.currentIndex].title} - liked`)
+                this.currentIndex++
             }
             if (direction == "dislike"){
                 console.log(`${this.movies[this.currentIndex].title} - disliked`)
+                this.currentIndex++
             }
             if (direction == "watched"){
-                console.log(`${this.movies[this.currentIndex].title} - watched`)
+                this.showModal = true;
             }
-            this.currentIndex++
         }
         else {
             console.log('End of movie list or invalid swipe');
