@@ -1,23 +1,25 @@
 <template>
   <h1>Your Watch List</h1>
   <div class="movie-list">
-    <div v-for="movie in filteredMovies" :key="movie.id" class="movie-item">
+    <div v-for="movie in movies" :key="movie.film_id" class="movie-item">
       <div class="movie-details">
         <img :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="Movie Poster" class="movie-image" />
-        <h3 @click="redirectToMovie(movie.id)" class="movie-title">{{ movie.title }}</h3>
+        <h3 @click="redirectToMovie(movie.film_id)" class="movie-title">{{ movie.film_name }}</h3>
       </div>
       <div class="movie-actions">
         <add-opinion v-if="showModal" :show-modal="showModal" :movie-title="currentMovieTitle" @close="showModal = false" @submit="handleOpinionSubmit"></add-opinion>
-        <button @click="addOpinion(movie.title, movie.id)" class="watched-button">Watched</button>
-        <button @click="removeFromList(movie.title)" class="delete-button">Remove</button>
+        <button @click="addOpinion(movie.film_name, movie.film_id)" class="watched-button">Watched</button>
+        <button @click="removeFromList(movie.id)" class="delete-button">Remove</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
+import { collection, getDocs, getFirestore, doc, deleteDoc } from "firebase/firestore"; 
 import AddOpinion from "../components/movie/AddOpinion.vue";
+import db from '../firebase/firebase'
 
 export default {
   components: {
@@ -28,36 +30,33 @@ export default {
       currentMovieId: 1,
       currentMovieTitle: '',
       movies: [],
-      currentUserID: 123,
-      showModal: false
+      showModal: false,
+      fireStore: null
     };
   },
+ computed: {
+    ...mapState(['userEmail'])
+ },
  methods: {
-      fetchMovies() {
-        this.$store.commit('setLoading', true);
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=5`)
-        .then(response => response.json())
-        .then(data => data.results)
-        .then(results => {
-          results.map((movie) =>{
-                movie["userId"] = 123
-            })
-            console.log(results)
-            this.movies = results
-        })
-        .catch(error => {
-            console.error('Error fetching movies:', error);
-        })
-        .finally(() => {
-            this.$store.commit('setLoading', false);
-        })
+    getUserSavedMovies() {
+      getDocs(collection(this.fireStore, "saved_movies"))
+      .then(querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          console.log({...doc.data(), id:doc.id})
+          this.movies.push({...doc.data(), id:doc.id})
+      })
+      })
     },
     redirectToMovie(id) {
-      this.$router.push({ name: 'Movie Item', query: { id: id}});
+      this.$router.push({ name: 'Movie Item', query: { id: id }});
     },
-    removeFromList(movieTitle, movieId) {
-      // Logic to add the movie to the watch list
-      console.log(`Removed ${movieTitle} from watch list`);
+    removeFromList(movieId) {
+      deleteDoc(doc(this.fireStore, "saved_movies", movieId))
+      .then(() => {
+        console.log(`Removed ${movieId} from watch list`)
+        this.movies = []
+        this.getUserSavedMovies()
+      })
     },
     addOpinion(movieTitle, movieId) {
       this.currentMovieId = movieId
@@ -72,11 +71,12 @@ export default {
   },
   computed: {
     filteredMovies() {
-      return this.movies.filter((movie) => movie.userId === this.currentUserID);
+      return this.movies.filter((movie) => movie.user_email == this.userEmail);
     },
   },
   created() {
-    this.fetchMovies();
+    this.fireStore = getFirestore(db);
+    this.getUserSavedMovies();
   },
 };
 </script>

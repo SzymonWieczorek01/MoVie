@@ -1,4 +1,6 @@
 import { createStore } from 'vuex';
+import { GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, signOut } from "firebase/auth";
 
 export default createStore({
   state() {
@@ -13,7 +15,10 @@ export default createStore({
       currentSwipePage: 1,
       currentSearchPage: 1,
       swipeTotalPages: 0,
-      searchTotalPages: 0
+      searchTotalPages: 0,
+      isLogged: false,
+      userName: '',
+      userEmail: ''
     };
   },
   mutations: {
@@ -51,9 +56,34 @@ export default createStore({
     },
     setAllowedGenres(state, genres) {
       state.genres = genres;
+    },
+    setUserData(state, results){
+      state.userName = results.displayName;
+      state.userEmail = results.email;
+      state.isLogged = true;
     }
   },
   actions: {
+    signOut({commit, state}){
+      const auth = getAuth();
+      signOut(auth)
+      .then(() => {
+        state.isLogged = false,
+        state.displayName = '',
+        state.userEmail = ''
+      })
+    },
+    signInWithGoogle({ commit, state }) {
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      signInWithPopup(auth, provider)
+      .then(result => {
+        commit("setUserData", result.user);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    },
     fetchMovies({ commit, state }) {
       commit('setLoading', true);
       fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${state.currentSwipePage}`)

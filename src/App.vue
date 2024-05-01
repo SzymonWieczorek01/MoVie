@@ -11,15 +11,33 @@
     import LoadingComponent from './components/layout/Loading.vue';
     import Navbar from './components/layout/Navbar.vue'
     import FooterComponent from './components/layout/Footer.vue'
-    import {ref, onBeforeMount} from 'vue'
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+    import { mapActions } from 'vuex';
 
     export default {
+    data() {
+      return {
+        auth: null
+      }
+    },
     components: {
-            Navbar,
-            FooterComponent,
-            LoadingComponent
+        Navbar,
+        FooterComponent,
+        LoadingComponent
+    },
+    mutations: {
+      ...mapActions(["setUserData", "setLoading"])
+    },
+    created() {
+      this.$store.commit("setLoading", true)
+      const auth = getAuth();
+      onAuthStateChanged(auth, (data) => {
+        if (data != null){
+          this.$store.commit("setUserData", data)
         }
-    }
+        this.$store.commit("setLoading", false)
+      }
+    )}};
 </script>
 
 <style>

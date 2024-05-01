@@ -6,7 +6,9 @@
       <li><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></li>
       <li><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></li>
       <li><search-component class="nav-item" /></li>
-      <li><router-link to="/profile" exact-active-class="active-link">Profile</router-link></li>
+      <li v-if="isLogged"><router-link to="/profile" exact-active-class="active-link">{{ userName }}</router-link></li>
+      <li v-if="isLogged" @click="signOut">Logout</li>
+      <li v-else><router-link to="/login" exact-active-class="active-link">Login</router-link></li>
     </ul>
   </nav>
 </template>
@@ -14,10 +16,17 @@
 
 <script>
 import SearchComponent from '../movie/SearchMovie.vue';
+import { mapState, mapActions } from 'vuex'
 
 export default {
   components: {
     SearchComponent
+  },
+  computed: {
+    ...mapState(["isLogged", "userName"])
+  },
+  methods: {
+    ...mapActions(['signOut'])
   }
 }
 </script>
