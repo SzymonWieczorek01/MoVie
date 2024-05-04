@@ -21,13 +21,16 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { collection, addDoc } from "firebase/firestore";
+import { mapState } from "vuex";
 
 export default {
   name: "AddOpinion",
   props: {
     showModal: Boolean,
-    movieTitle: String
+    movieTitle: String,
+    movieId: Number,
+    moviePosterPath: String
   },
   data() {
     return {
@@ -36,6 +39,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['userEmail', 'fireStore']),
     isValidReview() {
       return this.review.length >= 10;
     }
@@ -47,6 +51,14 @@ export default {
     submitReview() {
       if (this.isValidReview && this.rating >= 1 && this.rating <= 5) {
         console.log(`Rating: ${this.rating}, Review: ${this.review}`);
+        addDoc(collection(this.fireStore, "watched_movies"), {
+          film_id: this.movieId,
+          film_name: this.movieTitle,
+          poster_path: this.moviePosterPath,
+          user_email: this.userEmail,
+          rating: this.rating,
+          review: this.review
+      });
         this.$emit("submit");
       }
     }

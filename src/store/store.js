@@ -1,6 +1,8 @@
 import { createStore } from 'vuex';
 import { GoogleAuthProvider } from "firebase/auth";
 import { getAuth, signInWithPopup, signOut } from "firebase/auth";
+import db from '../firebase/firebase'
+import { collection, getDocs, getFirestore } from "firebase/firestore"; 
 
 export default createStore({
   state() {
@@ -18,7 +20,12 @@ export default createStore({
       searchTotalPages: 0,
       isLogged: false,
       userName: '',
-      userEmail: ''
+      userEmail: '',
+      userSavedMovies: [],
+      userSavedMoviesID: [],
+      fireStore: getFirestore(db),
+      userWatchedMovies: [],
+      userWatchedMoviesID: []
     };
   },
   mutations: {
@@ -38,7 +45,10 @@ export default createStore({
       state.searchResults = results;
     },
     setMovies(state, movies) {
-      state.movies.push(...movies);
+      state.movies = []
+      console.log(state.userSavedMovies)
+      const filteredMovies = movies.filter(movie => !(movie.id in state.userSavedMoviesID) )
+      state.movies.push(...filteredMovies);
     },
     incrementSwipePage(state) {
       if (!state.swipeTotalPages || state.currentSwipePage < state.swipeTotalPages) {
@@ -61,9 +71,45 @@ export default createStore({
       state.userName = results.displayName;
       state.userEmail = results.email;
       state.isLogged = true;
+    },
+    setUserSavedMovies(state, doc){
+      state.userSavedMovies.push({...doc.data(), id: doc.id})
+      state.userSavedMoviesID.push(doc.data().film_id)
+    },
+    setUserWatchedMovies(state, doc){
+      state.userWatchedMovies.push({...doc.data(), id: doc.id})
+      state.userWatchedMoviesID.push(doc.data().film_id)
     }
   },
   actions: {
+    getUserSavedMovies({commit, state}) {
+      state.userSavedMoviesID = []
+      state.userSavedMovies = []
+      getDocs(collection(state.fireStore, "saved_movies"))
+      .then(querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          if (doc.data().user_email == state.userEmail){
+            commit('setUserSavedMovies', doc)
+          }
+          else {}
+        }
+      )
+      console.log(state.userSavedMovies)
+      })
+    },
+    getUserWatchedMovies({commit, state}) {
+      state.userWatchedMoviesID = []
+      state.userWatchedMovies = []
+      getDocs(collection(state.fireStore, "watched_movies"))
+      .then(querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          if (doc.data().user_email == state.userEmail){
+            commit('setUserWatchedMovies', doc)
+          }
+          else {}
+      })
+      })
+    },
     signOut({commit, state}){
       const auth = getAuth();
       signOut(auth)
@@ -91,7 +137,6 @@ export default createStore({
         .then(data => {
           commit('setMovies', data.results);
           commit('setTotalSwipePages', data.total_pages);
-          commit('incrementSwipePage');
         })
         .catch(error => {
           console.error('Error fetching movies:', error);

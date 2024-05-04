@@ -12,9 +12,15 @@
         <p><strong>Status:</strong> {{ status }}</p>
         <p><strong>Genres:</strong> {{ genres }}</p>
         <p><strong>Origin Countries:</strong> {{ originCountries }}</p>
+        <p v-if="movieOpinions.length > 0">Movie Opinions:</p>
+          <ul v-if="movieOpinions.length > 0">
+            <li v-for="opinion in movieOpinions" :key="opinion.id">
+                <strong>{{ opinion.user_email }}</strong> thinks <em>{{ opinion.film_name }}</em> is <em>{{ opinion.review }}</em> and rates this film as <span>{{ opinion.rating }}</span>.
+            </li>
+          </ul>
       </div>
       <button class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
-      <add-opinion v-if="showModal" :show-modal="showModal" :movie-title="movieTitle" @close="showModal = false" @submit="handleOpinionSubmit"></add-opinion>
+      <add-opinion v-if="currentMovie" v-model:showModal="showModal" :movieTitle="currentMovie.title" :movieId="currentMovie.id" :moviePosterPath="currentMovie.backdrop_path" @submit="submitOpinion" @close="closeOpinion"></add-opinion>
       <button class="opinion-button" @click="showModal = true">Add Opinion</button>
     </div>
     <YouTube 
@@ -29,7 +35,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { defineComponent, ref, onMounted, watch } from 'vue';
+import { collection, getDocs, getFirestore } from "firebase/firestore"; 
 import YouTube from 'vue3-youtube';
 import AddOpinion from "../components/movie/AddOpinion.vue";
 
@@ -44,12 +50,16 @@ export default {
         movieTitle: '',
         movieSummary: '',
         moviePoster: '',
+        movieOpinions: [],
         genres: '',
         youtubeLink: '',
         originCountries: '',
         status: '',
         tagline: ''
     }
+  },
+  computed: {
+    ...mapState(['fireStore'])
   },
   watch: {
     '$route.query': {
@@ -87,6 +97,15 @@ export default {
           this.genres = data.genres.map(item => item["name"]).join(", ")
           this.status = data.status
           this.tagline = data.tagline
+
+          getDocs(collection(this.fireStore, "watched_movies"))
+          .then(querySnapshot => {
+            querySnapshot.forEach((doc) => {
+              if (doc.data().film_id == this.movieId){
+                this.movieOpinions.push(doc.data())
+              }
+            console.log(this.movieOpinions)
+          })})
       }).catch(error => {
         console.error('Error fetching movies:', error);
       }).finally(() => {

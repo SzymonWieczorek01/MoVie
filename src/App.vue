@@ -28,12 +28,17 @@
     mutations: {
       ...mapActions(["setUserData", "setLoading"])
     },
+    methods: {
+      ...mapActions(['getUserSavedMovies', 'getUserWatchedMovies'])
+    },
     created() {
       this.$store.commit("setLoading", true)
       const auth = getAuth();
       onAuthStateChanged(auth, (data) => {
         if (data != null){
           this.$store.commit("setUserData", data)
+          this.getUserSavedMovies();
+          this.getUserWatchedMovies();
         }
         this.$store.commit("setLoading", false)
       }

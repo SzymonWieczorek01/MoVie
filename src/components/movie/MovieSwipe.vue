@@ -5,7 +5,7 @@
       :movie="currentMovie"
       @swipe="handleSwipe"
     />
-    <add-opinion v-if="currentMovie" v-model:showModal="showModal" :movieTitle="currentMovie.title" @submit="submitOpinion" @close="closeOpinion"></add-opinion>
+    <add-opinion v-if="currentMovie" v-model:showModal="showModal" :movieTitle="currentMovie.title" :movieId="currentMovie.id" :moviePosterPath="currentMovie.backdrop_path" @submit="submitOpinion" @close="closeOpinion"></add-opinion>
     </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['fetchMovies']),
+    ...mapActions(['fetchMovies', 'getUserSavedMovies', 'getUserWatchedMovies', 'incrementSwipePage']),
     closeOpinion() {
       this.showModal = false;
     },
@@ -78,11 +78,14 @@ export default {
   watch: {
     currentIndex(newVal) {
       if (this.nearEndOfList) {
+        this.incrementSwipePage();
         this.fetchMovies();
       }
     }
   },
   created() {
+    // this.getUserSavedMovies()
+    // this.getUserWatchedMovies()
     this.fetchMovies();
   }
 }
