@@ -54,7 +54,7 @@ export default {
   methods: {
     ...mapActions(['getUserSavedMovies', 'getUserDislikedMovies']),
     incrementSwipePage() {
-      if (!this.swipeTotalPages || this.currentSwipePage < this.swipeTotalPages) {
+      if (!this.swipeTotalPages || this.currentSwipePage <= this.swipeTotalPages) {
         this.currentSwipePage++;
         this.currentIndex = 0;
         this.fetchMovies();
@@ -132,8 +132,16 @@ export default {
         this.fetchMovies();
       }
     },
+    isLogged(newLogged, oldLogged) {
+        if (newLogged == false){
+          this.$router.push({ name: 'Home'})
+        }
+    }
   },
   created() {
+    if (this.isLogged == false){
+      this.$router.push({ name: 'Home'})
+    }
     this.fetchMovies();
   }
 }

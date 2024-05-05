@@ -43,9 +43,6 @@
           this.getUserSavedMovies();
           this.getUserWatchedMovies();
           this.getUserDislikedMovies();
-          this.$router.push({ name: 'Home'})
-        } else {
-          this.$router.push({ name: 'Home'})
         }
         this.$store.commit("setLoading", false)
       }

@@ -13,5 +13,12 @@
         computed: {
             ...mapState(['userName', 'isLogged'])
         },
+        watch: {
+            isLogged(newLogged, oldLogged) {
+                if (newLogged == true){
+                    this.$router.push({ name: 'Home'})
+                }
+            }
+        }
     }
 </script>

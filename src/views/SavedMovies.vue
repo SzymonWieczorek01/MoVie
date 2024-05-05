@@ -36,7 +36,7 @@ export default {
     };
   },
  computed: {
-    ...mapState(['userEmail', 'fireStore', 'userSavedMovies'])
+    ...mapState(['userEmail', 'fireStore', 'userSavedMovies', 'isLogged'])
  },
  methods: {
     ...mapActions(['getUserSavedMovies', 'setLoading']),
@@ -64,6 +64,18 @@ export default {
       this.showModal = false;
     },
   },
+  watch: {
+    isLogged(newLogged, oldLogged) {
+        if (newLogged == false){
+          this.$router.push({ name: 'Home'})
+        }
+    }
+  },
+  created() {
+    if (this.isLogged == false) {
+      this.$router.push({ name: 'Home'})
+    }
+  }
 };
 </script>
 
