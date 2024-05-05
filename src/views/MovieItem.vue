@@ -19,9 +19,9 @@
             </li>
           </ul>
       </div>
-      <button class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
-      <add-opinion v-if="currentMovie" v-model:showModal="showModal" :movieTitle="currentMovie.title" :movieId="currentMovie.id" :moviePosterPath="currentMovie.backdrop_path" @submit="submitOpinion" @close="closeOpinion"></add-opinion>
-      <button class="opinion-button" @click="showModal = true">Add Opinion</button>
+      <button v-if="isLogged && isInSaved" class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
+      <add-opinion v-if="movieId" v-model:showModal="showModal" :movieTitle="movieTitle" :movieId="movieId" :moviePosterPath="moviePoster" @submit="showModal = false" @close="showModal = false"></add-opinion>
+      <button v-if="isLogged && isInWacthed" class="opinion-button" @click="showModal = true">Add Opinion</button>
     </div>
     <YouTube 
       :src="youtubeLink"
@@ -35,7 +35,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import { collection, getDocs, getFirestore } from "firebase/firestore"; 
+import { collection, getDocs, getFirestore, addDoc } from "firebase/firestore"; 
 import YouTube from 'vue3-youtube';
 import AddOpinion from "../components/movie/AddOpinion.vue";
 
@@ -59,7 +59,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fireStore'])
+    ...mapState(['fireStore', 'isLogged', 'userEmail', 'userSavedMoviesID', 'userWatchedMoviesID']),
+    isInSaved() {
+      return !(this.userSavedMoviesID.includes(parseInt(this.movieId)))
+    },
+    isInWacthed() {
+      return !(this.userWatchedMoviesID.includes(parseInt(this.movieId)))
+    }
   },
   watch: {
     '$route.query': {
@@ -72,15 +78,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['getUserSavedMovies', 'getUserWatchedMovies']),
     onReady() {
         this.getYoutubeKey();
     },
-    addToWatchList() {
-      // Logic to add the movie to the watch list
-      console.log(`Added ${this.movieTitle} to watch list`);
+    addToWatchList(){
+      addDoc(collection(this.fireStore, "saved_movies"), {
+          film_id: parseInt(this.movieId),
+          film_name: this.movieTitle,
+          poster_path: this.moviePoster,
+          user_email: this.userEmail
+      });
+      this.getUserSavedMovies();
     },
     handleOpinionSubmit() {
-      // Logic to handle the opinion submission
       console.log(`Opinion submitted for ${this.movieTitle}`);
       this.showModal = false;
     },

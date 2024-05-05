@@ -22,22 +22,55 @@ export default {
     AddOpinion
   },
   computed: {
-    ...mapState(['movies', 'userEmail']),
+    ...mapState(['userEmail', 'userSavedMoviesID', 'userWatchedMoviesID', 'isLogged', 'fireStore']),
     currentMovie() {
       return this.movies[this.currentIndex];
     },
     nearEndOfList() {
       return this.currentIndex == this.movies.length-1;
+    },
+    parsedUserSavedMovies() {
+      return JSON.parse(JSON.stringify(this.userSavedMoviesID))
+    },
+    parsedUserWatchedMovies() {
+      return JSON.parse(JSON.stringify(this.userWatchedMoviesID))
     }
   },
   data() {
     return {
       currentIndex: 0,
       showModal: false,
+      movies: [],
+      swipeTotalPages: 0,
+      currentSwipePage: 1
     };
   },
   methods: {
-    ...mapActions(['fetchMovies', 'getUserSavedMovies', 'getUserWatchedMovies', 'incrementSwipePage']),
+    ...mapActions(['getUserSavedMovies']),
+    incrementSwipePage() {
+      if (!this.swipeTotalPages || this.currentSwipePage < this.swipeTotalPages) {
+        this.currentSwipePage++;
+        this.currentIndex = 0;
+      }
+    },
+    fetchMovies() {
+      this.$store.commit('setLoading', true);
+      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${this.currentSwipePage}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(JSON.parse(JSON.stringify(this.userSavedMoviesID)))
+          console.log(this.parsedUserWatchedMovies)
+          var movies = data.results.filter(movie => !(this.parsedUserSavedMovies.includes(movie.id) || this.parsedUserWatchedMovies.includes(movie.id)))
+          this.movies = movies
+          this.swipeTotalPages = data.total_pages
+        })
+        .catch(error => {
+          console.error('Error fetching movies:', error);
+        })
+        .finally(() => {
+          this.$store.commit('setLoading', false);
+        })
+    },
     closeOpinion() {
       this.showModal = false;
     },
@@ -46,11 +79,10 @@ export default {
       this.currentIndex++
     },
     pushSavedMovieToDb(movieData){
-        const fireStore = getFirestore(db);
-        addDoc(collection(fireStore, "saved_movies"), {
-          film_id: movieData.id,
+        addDoc(collection(this.fireStore, "saved_movies"), {
+          film_id: parseInt(movieData.id),
           film_name: movieData.title,
-          poster_path: movieData.backdrop_path,
+          poster_path: movieData.poster_path,
           user_email: this.userEmail
       });
     },
@@ -59,7 +91,8 @@ export default {
         if (this.currentIndex < this.movies.length - 1){
             if (direction == "like"){
                 this.pushSavedMovieToDb(this.movies[this.currentIndex])
-                console.log(`${this.movies[this.currentIndex].title} - liked`)
+                this.getUserSavedMovies();
+                console.log(`${this.movies[this.currentIndex].title} - liked`, this.userSavedMoviesID)
                 this.currentIndex++
             }
             if (direction == "dislike"){
@@ -76,16 +109,14 @@ export default {
     },
   },
   watch: {
-    currentIndex(newVal) {
+    currentIndex() {
       if (this.nearEndOfList) {
         this.incrementSwipePage();
         this.fetchMovies();
       }
-    }
+    },
   },
   created() {
-    // this.getUserSavedMovies()
-    // this.getUserWatchedMovies()
     this.fetchMovies();
   }
 }

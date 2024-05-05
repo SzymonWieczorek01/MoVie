@@ -2,9 +2,8 @@
   <nav class="navbar">
     <ul>
       <li><router-link to="/" exact-active-class="active-link">Home</router-link></li>
-      <li><router-link to="/random-movies" exact-active-class="active-link">Random Movie</router-link></li>
-      <li><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></li>
-      <li><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></li>
+      <li v-if="isLogged"><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></li>
+      <li v-if="isLogged"><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></li>
       <li><search-component class="nav-item" /></li>
       <li v-if="isLogged"><router-link to="/profile" exact-active-class="active-link">{{ userName }}</router-link></li>
       <li v-if="isLogged" @click="signOut">Logout</li>

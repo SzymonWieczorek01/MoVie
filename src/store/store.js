@@ -14,9 +14,7 @@ export default createStore({
       year: 0,
       isLoading: false,
       movies: [],
-      currentSwipePage: 1,
       currentSearchPage: 1,
-      swipeTotalPages: 0,
       searchTotalPages: 0,
       isLogged: false,
       userName: '',
@@ -44,17 +42,6 @@ export default createStore({
     setSearchResults(state, results) {
       state.searchResults = results;
     },
-    setMovies(state, movies) {
-      state.movies = []
-      console.log(state.userSavedMovies)
-      const filteredMovies = movies.filter(movie => !(movie.id in state.userSavedMoviesID) )
-      state.movies.push(...filteredMovies);
-    },
-    incrementSwipePage(state) {
-      if (!state.swipeTotalPages || state.currentSwipePage < state.swipeTotalPages) {
-        state.currentSwipePage++;
-      }
-    },
     setSearchPage(state, page) {
       state.currentSearchPage = parseInt(page);
     },
@@ -79,7 +66,16 @@ export default createStore({
     setUserWatchedMovies(state, doc){
       state.userWatchedMovies.push({...doc.data(), id: doc.id})
       state.userWatchedMoviesID.push(doc.data().film_id)
-    }
+    },
+    setLogOut(state){
+      state.isLogged = false
+      state.displayName = ''
+      state.userEmail = ''
+      state.userSavedMovies = []
+      state.userSavedMoviesID = []
+      state.userWatchedMovies = []
+      state.userWatchedMoviesID = []
+    },
   },
   actions: {
     getUserSavedMovies({commit, state}) {
@@ -114,9 +110,7 @@ export default createStore({
       const auth = getAuth();
       signOut(auth)
       .then(() => {
-        state.isLogged = false,
-        state.displayName = '',
-        state.userEmail = ''
+        commit('setLogOut')
       })
     },
     signInWithGoogle({ commit, state }) {
@@ -129,22 +123,6 @@ export default createStore({
       .catch(error => {
         console.log(error);
       })
-    },
-    fetchMovies({ commit, state }) {
-      commit('setLoading', true);
-      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${state.currentSwipePage}`)
-        .then(response => response.json())
-        .then(data => {
-          commit('setMovies', data.results);
-          commit('setTotalSwipePages', data.total_pages);
-        })
-        .catch(error => {
-          console.error('Error fetching movies:', error);
-        })
-        .finally(() => {
-          commit('setLoading', false);
-        })
-      
     },
     fetchGenres({ commit }) {
       fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=67cdbbd1a17bf16dff493523ff9c18d4`)

@@ -12,7 +12,7 @@
     import Navbar from './components/layout/Navbar.vue'
     import FooterComponent from './components/layout/Footer.vue'
     import { getAuth, onAuthStateChanged } from "firebase/auth";
-    import { mapActions } from 'vuex';
+    import { mapActions, mapState } from 'vuex';
 
     export default {
     data() {
@@ -24,6 +24,9 @@
         Navbar,
         FooterComponent,
         LoadingComponent
+    },
+    computed: {
+      ...mapState(['isLogged'])
     },
     mutations: {
       ...mapActions(["setUserData", "setLoading"])
@@ -39,6 +42,9 @@
           this.$store.commit("setUserData", data)
           this.getUserSavedMovies();
           this.getUserWatchedMovies();
+          this.$router.push({ name: 'Swipe Movies'})
+        } else {
+          this.$router.push({ name: 'Home'})
         }
         this.$store.commit("setLoading", false)
       }

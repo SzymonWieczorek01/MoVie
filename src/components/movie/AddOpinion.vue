@@ -22,7 +22,7 @@
 
 <script>
 import { collection, addDoc } from "firebase/firestore";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "AddOpinion",
@@ -45,6 +45,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getUserWatchedMovies']),
     hideModal() {
       this.$emit("close");
     },
@@ -52,7 +53,7 @@ export default {
       if (this.isValidReview && this.rating >= 1 && this.rating <= 5) {
         console.log(`Rating: ${this.rating}, Review: ${this.review}`);
         addDoc(collection(this.fireStore, "watched_movies"), {
-          film_id: this.movieId,
+          film_id: parseInt(this.movieId),
           film_name: this.movieTitle,
           poster_path: this.moviePosterPath,
           user_email: this.userEmail,
@@ -60,6 +61,7 @@ export default {
           review: this.review
       });
         this.$emit("submit");
+        this.getUserWatchedMovies();
       }
     }
   }
