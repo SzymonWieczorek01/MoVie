@@ -32,7 +32,7 @@
       ...mapActions(["setUserData", "setLoading"])
     },
     methods: {
-      ...mapActions(['getUserSavedMovies', 'getUserWatchedMovies'])
+      ...mapActions(['getUserSavedMovies', 'getUserWatchedMovies', 'getUserDislikedMovies'])
     },
     created() {
       this.$store.commit("setLoading", true)
@@ -42,7 +42,8 @@
           this.$store.commit("setUserData", data)
           this.getUserSavedMovies();
           this.getUserWatchedMovies();
-          this.$router.push({ name: 'Swipe Movies'})
+          this.getUserDislikedMovies();
+          this.$router.push({ name: 'Home'})
         } else {
           this.$router.push({ name: 'Home'})
         }

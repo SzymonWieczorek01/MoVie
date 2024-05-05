@@ -21,6 +21,7 @@ export default createStore({
       userEmail: '',
       userSavedMovies: [],
       userSavedMoviesID: [],
+      userDislikedMoviesID: [],
       fireStore: getFirestore(db),
       userWatchedMovies: [],
       userWatchedMoviesID: []
@@ -67,6 +68,9 @@ export default createStore({
       state.userWatchedMovies.push({...doc.data(), id: doc.id})
       state.userWatchedMoviesID.push(doc.data().film_id)
     },
+    setUserDislikedMovies(state, id){
+      state.userDislikedMoviesID.push(id)
+    },
     setLogOut(state){
       state.isLogged = false
       state.displayName = ''
@@ -90,7 +94,6 @@ export default createStore({
           else {}
         }
       )
-      console.log(state.userSavedMovies)
       })
     },
     getUserWatchedMovies({commit, state}) {
@@ -101,6 +104,19 @@ export default createStore({
         querySnapshot.forEach((doc) => {
           if (doc.data().user_email == state.userEmail){
             commit('setUserWatchedMovies', doc)
+          }
+          else {}
+      })
+      })
+    },
+    getUserDislikedMovies({commit, state}) {
+      state.userDislikedMoviesID = []
+      getDocs(collection(state.fireStore, "disliked_movies"))
+      .then(querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          var docData = doc.data()
+          if (docData.user_email == state.userEmail){
+            commit('setUserDislikedMovies', docData.film_id)
           }
           else {}
       })

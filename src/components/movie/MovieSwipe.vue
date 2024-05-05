@@ -22,18 +22,24 @@ export default {
     AddOpinion
   },
   computed: {
-    ...mapState(['userEmail', 'userSavedMoviesID', 'userWatchedMoviesID', 'isLogged', 'fireStore']),
+    ...mapState(['userEmail', 'userSavedMoviesID', 'userWatchedMoviesID', 'userDislikedMoviesID', 'isLogged', 'fireStore']),
     currentMovie() {
       return this.movies[this.currentIndex];
     },
     nearEndOfList() {
-      return this.currentIndex == this.movies.length-1;
+      return this.currentIndex >= this.movies.length-1;
     },
     parsedUserSavedMovies() {
       return JSON.parse(JSON.stringify(this.userSavedMoviesID))
     },
     parsedUserWatchedMovies() {
       return JSON.parse(JSON.stringify(this.userWatchedMoviesID))
+    },
+    parsedUserDislikedMovies() {
+      return JSON.parse(JSON.stringify(this.userDislikedMoviesID))
+    },
+    banedMoviesID(){
+      return this.parsedUserSavedMovies.concat(this.parsedUserDislikedMovies, this.userWatchedMoviesID)
     }
   },
   data() {
@@ -46,11 +52,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['getUserSavedMovies']),
+    ...mapActions(['getUserSavedMovies', 'getUserDislikedMovies']),
     incrementSwipePage() {
       if (!this.swipeTotalPages || this.currentSwipePage < this.swipeTotalPages) {
         this.currentSwipePage++;
         this.currentIndex = 0;
+        this.fetchMovies();
       }
     },
     fetchMovies() {
@@ -58,9 +65,10 @@ export default {
       fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=${this.currentSwipePage}`)
         .then(response => response.json())
         .then(data => {
-          console.log(JSON.parse(JSON.stringify(this.userSavedMoviesID)))
-          console.log(this.parsedUserWatchedMovies)
-          var movies = data.results.filter(movie => !(this.parsedUserSavedMovies.includes(movie.id) || this.parsedUserWatchedMovies.includes(movie.id)))
+          var movies = data.results.filter(movie => !(this.banedMoviesID.includes(movie.id)))
+          if (movies.length == 0){
+            this.incrementSwipePage();
+          }
           this.movies = movies
           this.swipeTotalPages = data.total_pages
         })
@@ -78,6 +86,14 @@ export default {
       this.showModal = false;
       this.currentIndex++
     },
+    pushDislikedMovieToDB(movieData){
+      addDoc(collection(this.fireStore, "disliked_movies"), {
+          film_id: parseInt(movieData.id),
+          film_name: movieData.title,
+          poster_path: movieData.poster_path,
+          user_email: this.userEmail
+      });
+    },
     pushSavedMovieToDb(movieData){
         addDoc(collection(this.fireStore, "saved_movies"), {
           film_id: parseInt(movieData.id),
@@ -88,15 +104,15 @@ export default {
     },
     handleSwipe(direction) {
         console.log(this.movies[this.currentIndex])
-        if (this.currentIndex < this.movies.length - 1){
+        if (this.currentIndex <= this.movies.length){
             if (direction == "like"){
                 this.pushSavedMovieToDb(this.movies[this.currentIndex])
                 this.getUserSavedMovies();
-                console.log(`${this.movies[this.currentIndex].title} - liked`, this.userSavedMoviesID)
                 this.currentIndex++
             }
             if (direction == "dislike"){
-                console.log(`${this.movies[this.currentIndex].title} - disliked`)
+                this.pushDislikedMovieToDB(this.movies[this.currentIndex])
+                this.getUserDislikedMovies();
                 this.currentIndex++
             }
             if (direction == "watched"){
@@ -104,6 +120,7 @@ export default {
             }
         }
         else {
+            console.log(this.nearEndOfList, this.movies.length, this.currentSwipePage)
             console.log('End of movie list or invalid swipe');
         }
     },
