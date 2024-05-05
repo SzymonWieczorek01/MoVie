@@ -60,8 +60,8 @@ export default {
           rating: this.rating,
           review: this.review
       });
-        this.$emit("submit");
         this.getUserWatchedMovies();
+        this.$emit("submit");
       }
     }
   }
