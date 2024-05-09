@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "firebase": "^10.11.0",
-    "vue": "^3.2.47",
+    "node": "^20.13.0",
+    "vue": "^3.4.27",
     "vue-router": "^4.3.0",
     "vue3-touch-events": "^4.1.8",
     "vue3-youtube": "^0.1.9",
@@ -18,6 +19,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
-    "vite": "^4.2.0"
+    "vite": "^4.5.3"
   }
 }
