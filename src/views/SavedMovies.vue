@@ -9,7 +9,7 @@
       <div class="movie-actions">
         <add-opinion v-if="showModal" v-model:showModal="showModal" :movieTitle="currentMovieTitle" :movieId="currentMovieId" :moviePosterPath="currentMoviePoster" @submit="handleOpinionSubmit()" @close="this.showModal = false"></add-opinion>
         <button @click="addOpinion(movie.film_name, movie.film_id, movie.poster_path, movie.id)" class="watched-button">Watched</button>
-        <button @click="removeFromList(movie.id)" class="delete-button">Remove</button>
+        <button @click="removeFromList(movie.film_id, movie.id)" class="delete-button">Remove</button>
       </div>
     </div>
   </div>
@@ -39,16 +39,15 @@ export default {
     ...mapState(['userEmail', 'fireStore', 'userSavedMovies', 'isLogged'])
  },
  methods: {
-    ...mapActions(['getUserSavedMovies', 'setLoading']),
+    ...mapActions(['setLoading']),
     redirectToMovie(id) {
       this.$router.push({ name: 'Movie Item', query: { id: id }});
     },
-    removeFromList(movieId) {
+    removeFromList(movieId, Id) {
       this.$store.commit('setLoading', true)
-      deleteDoc(doc(this.fireStore, "saved_movies", movieId))
+      deleteDoc(doc(this.fireStore, "saved_movies", String(Id)))
       .then(() => {
-        console.log(`Removed ${movieId} from watch list`)
-        this.getUserSavedMovies()
+        this.$store.commit("removeIdFromSavedMovies", movieId)
         this.$store.commit('setLoading', false)
       })
     },

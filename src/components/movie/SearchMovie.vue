@@ -1,12 +1,13 @@
 <template>
   <div>
-    <input type="text" v-model="query" @input="updateQuery" placeholder="Search...">
-    <select v-model="with_genres" @change="updateQuery">
+    <input type="text" v-model="query" placeholder="Search...">
+    <select v-model="with_genres">
       <option v-for="genre in genres" :value="genre.id">
         {{ genre.name }}
       </option>
     </select>
-    <input type="number" v-model.number="year" @input="updateQuery" placeholder="Year">
+    <input type="number" v-model="year" placeholder="Year">
+    <button @click="updateQuery">Search</button>
   </div>
 </template>
 

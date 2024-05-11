@@ -13,7 +13,7 @@
         </svg>
 
       </router-link></li>
-      <li><search-component class="nav-item" /></li>
+      <li v-if="showSearch"><search-component class="nav-item" /></li>
       <li v-if="isLogged"><button class="saved-movies"><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></button></li>
       <li v-if="isLogged"><button class="movie-swipe"><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></button></li>
       <li v-if="isLogged"><router-link to="/profile" exact-active-class="active-link">{{ userName }}</router-link></li>
@@ -33,7 +33,7 @@ export default {
     SearchComponent
   },
   computed: {
-    ...mapState(["isLogged", "userName"])
+    ...mapState(["isLogged", "userName", 'showSearch'])
   },
   methods: {
     ...mapActions(['signOut'])

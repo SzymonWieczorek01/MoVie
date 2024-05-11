@@ -27,7 +27,7 @@ export default {
       return this.movies[this.currentIndex];
     },
     nearEndOfList() {
-      return this.currentIndex >= this.movies.length-1;
+      return this.currentIndex == this.movies.length;
     },
     parsedUserSavedMovies() {
       return JSON.parse(JSON.stringify(this.userSavedMoviesID))
@@ -52,7 +52,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['getUserSavedMovies', 'getUserDislikedMovies']),
     incrementSwipePage() {
       if (!this.swipeTotalPages || this.currentSwipePage <= this.swipeTotalPages) {
         this.currentSwipePage++;
@@ -92,27 +91,32 @@ export default {
           film_name: movieData.title,
           poster_path: movieData.poster_path,
           user_email: this.userEmail
-      });
+      })
+      .then((doc) => {
+        this.$store.commit("setUserDislikedMovies", movieData.id)
+      });;
     },
     pushSavedMovieToDb(movieData){
-        addDoc(collection(this.fireStore, "saved_movies"), {
+        var parsedMovieData = {
           film_id: parseInt(movieData.id),
           film_name: movieData.title,
           poster_path: movieData.poster_path,
           user_email: this.userEmail
-      });
+        }
+        addDoc(collection(this.fireStore, "saved_movies"), parsedMovieData)
+        .then((doc) => {
+          parsedMovieData['id'] = doc.id
+          this.$store.commit("setUserSavedMovies", parsedMovieData)
+        });
     },
     handleSwipe(direction) {
-        console.log(this.movies[this.currentIndex])
         if (this.currentIndex <= this.movies.length){
             if (direction == "like"){
                 this.pushSavedMovieToDb(this.movies[this.currentIndex])
-                this.getUserSavedMovies();
                 this.currentIndex++
             }
             if (direction == "dislike"){
                 this.pushDislikedMovieToDB(this.movies[this.currentIndex])
-                this.getUserDislikedMovies();
                 this.currentIndex++
             }
             if (direction == "watched"){
@@ -120,17 +124,17 @@ export default {
             }
         }
         else {
-            console.log(this.nearEndOfList, this.movies.length, this.currentSwipePage)
+            this.incrementSwipePage();
             console.log('End of movie list or invalid swipe');
         }
     },
   },
   watch: {
     currentIndex() {
-      if (this.nearEndOfList) {
+      if (this.nearEndOfList == true) {
         this.incrementSwipePage();
-        this.fetchMovies();
       }
+      console.log(this.currentIndex)
     },
     isLogged(newLogged, oldLogged) {
         if (newLogged == false){

@@ -78,21 +78,23 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getUserSavedMovies', 'getUserWatchedMovies']),
     onReady() {
         this.getYoutubeKey();
     },
     addToWatchList(){
-      addDoc(collection(this.fireStore, "saved_movies"), {
+      var movieData = {
           film_id: parseInt(this.movieId),
           film_name: this.movieTitle,
           poster_path: this.moviePoster,
           user_email: this.userEmail
+      }
+      addDoc(collection(this.fireStore, "saved_movies"), movieData)
+      .then(doc => {
+        movieData["id"] = doc.id
+        this.$store.commit("setUserSavedMovies", movieData)
       });
-      this.getUserSavedMovies();
     },
     handleOpinionSubmit() {
-      console.log(`Opinion submitted for ${this.movieTitle}`);
       this.showModal = false;
     },
     getMovieData () {
@@ -108,14 +110,12 @@ export default {
           this.genres = data.genres.map(item => item["name"]).join(", ")
           this.status = data.status
           this.tagline = data.tagline
-
           getDocs(collection(this.fireStore, "watched_movies"))
           .then(querySnapshot => {
             querySnapshot.forEach((doc) => {
               if (doc.data().film_id == this.movieId){
                 this.movieOpinions.push(doc.data())
               }
-            console.log(this.movieOpinions)
           })})
       }).catch(error => {
         console.error('Error fetching movies:', error);
@@ -128,9 +128,7 @@ export default {
         fetch(`https://api.kinocheck.de/movies?tmdb_id=${this.movieId}`)
         .then(response => response.json())
         .then(data => {
-            console.log('API Response:', data);
             if (data.trailer && data.trailer.youtube_video_id) {
-                console.log(`YouTube Link: https://www.youtube.com/watch?v=${data.trailer.youtube_video_id}`);
                 this.youtubeLink = `https://www.youtube.com/watch?v=${data.trailer.youtube_video_id}`;
             } else {
                 console.log('YouTube video ID not found in the API response');

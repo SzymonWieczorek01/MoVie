@@ -51,16 +51,18 @@ export default {
     },
     submitReview() {
       if (this.isValidReview && this.rating >= 1 && this.rating <= 5) {
-        console.log(`Rating: ${this.rating}, Review: ${this.review}`);
-        addDoc(collection(this.fireStore, "watched_movies"), {
+        const movieData = {
           film_id: parseInt(this.movieId),
           film_name: this.movieTitle,
           poster_path: this.moviePosterPath,
           user_email: this.userEmail,
           rating: this.rating,
           review: this.review
-      });
-        this.getUserWatchedMovies();
+      }
+        addDoc(collection(this.fireStore, "watched_movies"), movieData)
+        .then(doc => {
+          this.$store.commit("setUserWatchedMovies", movieData, doc.id)
+        });
         this.$emit("submit");
       }
     }
