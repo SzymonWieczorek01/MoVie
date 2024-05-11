@@ -1,13 +1,13 @@
 <template>
   <div>
-    <input type="text" v-model="query" placeholder="Search...">
-    <select v-model="with_genres">
+    <input type="text" v-model="query" @input="$emit('newQuery')" placeholder="Search...">
+    <select v-model="with_genres" @change="$emit('newQuery')">
       <option v-for="genre in genres" :value="genre.id">
         {{ genre.name }}
       </option>
     </select>
-    <input type="number" v-model="year" placeholder="Year">
-    <button @click="updateQuery">Search</button>
+    <input type="number" v-model="year" placeholder="Year" @input="$emit('newQuery')">
+    <button @click="updateQuery" v-if="showButton!=false">Search</button>
   </div>
 </template>
 
@@ -19,8 +19,11 @@ export default {
     return {
       query: '',
       with_genres: 0,
-      year: null
+      year: null,
     };
+  },
+  props: {
+    showButton: true
   },
   methods: {
     ...mapActions(['fetchGenres']),

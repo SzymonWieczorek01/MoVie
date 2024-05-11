@@ -1,62 +1,51 @@
 <template>
-  <input type="text" v-model="query" @input="updateQuery" placeholder="Search...">
-    <select v-model="with_genres" @change="updateQuery">
-      <option v-for="genre in genres" :value="genre.id">
-        {{ genre.name }}
-      </option>
-    </select>
-    <input type="number" v-model="year" @input="updateQuery" placeholder="Year">
   <div>
-    <h1 v-if="query">Search Results for {{ query }}</h1>
-    <h1 v-if="with_genres && !query">Search Results with Genre {{ genreNames([with_genres]) }}</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Poster</th>
-          <th>Title</th>
-          <th>Release Date</th>
-          <th>Overview</th>
-          <th>Genres</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="result in searchResults" :key="result.id">
-          <td><img :src="'https://image.tmdb.org/t/p/w500' + result.poster_path" alt="Movie Poster" style="width: 100px;"></td>
-          <td @click="redirectToMovie(result.id)">{{ result.title }}</td>
-          <td>{{ result.release_date }}</td>
-          <td>{{ result.overview }}</td>
-          <td>{{ genreNames(result.genre_ids) }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <button @click="decrementSearchPage" v-if="currentSearchPage > 1">Previous</button>
-    <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages">Next</button>
-    <div>Page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
+    <SearchMovie ref="SearchMovie" :showButton="false" @newQuery="$refs.SearchMovie.updateQuery()"/>
+    <div>
+      <h1 v-if="query">Search Results for {{ query }}</h1>
+      <h1 v-if="with_genres && !query">Search Results with Genre {{ genreNames([with_genres]) }}</h1>
+      <button @click="toggleView" style="font-size: 15px;">{{ asTable ? 'Switch to Cards View' : 'Switch to Table View' }}</button>
+      <div v-if="!asTable">
+        <DisplayMoviesAsCards :movies="searchResults"/>
+      </div>
+      <div v-if="asTable">
+        <DisplayMoviesAsTable :results="searchResults"/>
+      </div>
+      <div>
+        <button @click="decrementSearchPage" v-if="currentSearchPage > 1">Previous</button>
+        <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages">Next</button>
+        <div>Page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { onBeforeUnmount } from 'vue';
+import SearchMovie from '../components/movie/SearchMovie.vue';
+import DisplayMoviesAsTable from '../components/movie/DisplayMoviesAsTable.vue';
+import DisplayMoviesAsCards from '../components/movie/DisplayMoviesAsCards.vue';
 
 export default {
-  data () {
+  components: {
+    SearchMovie, DisplayMoviesAsTable, DisplayMoviesAsCards
+  },
+  data() {
     return {
-      query: '',
-      with_genres: 0,
-      year: null
-    }
+      asTable: false
+    };
   },
   watch: {
     '$route.query': {
       handler(newQuery) {
-        var newQ = newQuery.q || ''
-        var newGenres = newQuery.with_genres ? parseInt(newQuery.with_genres) : 0
-        var newYear = newQuery.year
+        const newQ = newQuery.q || '';
+        const newGenres = newQuery.with_genres ? parseInt(newQuery.with_genres) : 0;
+        const newYear = newQuery.year;
 
-        this.query = newQ
-        this.with_genres = newGenres
-        this.year = newYear
+        this.query = newQ;
+        this.with_genres = newGenres;
+        this.year = newYear;
 
         this.$store.commit('setSearchPage', newQuery.page || 1);
         this.$store.commit('setSearchQuery', newQ);
@@ -100,13 +89,13 @@ export default {
           return genre ? genre.name : 'Unknown';
         }).join(', ');
     },
-    redirectToMovie(id) {
-      this.$router.push({ name: 'Movie Item', query: { id: id}});
-    },
+    toggleView() {
+      this.asTable = !this.asTable;
+    }
   },
   created() {
-    this.$store.commit("setShowSearch", false)
-    let page = this.$route.query.page || 1;
+    this.$store.commit("setShowSearch", false);
+    const page = this.$route.query.page || 1;
     this.$store.commit('setSearchPage', parseInt(page));
     this.performSearch(); 
     window.addEventListener('beforeunload', this.handleBeforeUnload);

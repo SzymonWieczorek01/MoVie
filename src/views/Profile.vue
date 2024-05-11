@@ -8,13 +8,13 @@
     <div class="opinions">
       <h3>Opinions:</h3>
       <ul>
-        <li v-for="opinion in userWatchedMovies" :key="opinion.id">{{ opinion.film_name }} - {{ opinion.review }} with rating: {{ opinion.rating }}</li>
+        <li v-for="opinion in userWatchedMovies" :key="opinion.id">{{ opinion.title }} - {{ opinion.review }} with rating: {{ opinion.rating }}</li>
       </ul>
     </div>
     <div class="watch-list">
       <h3>Watch List:</h3>
       <ul>
-        <li v-for="movie in userSavedMovies" :key="movie.id">{{ movie.film_name }}</li>
+        <li v-for="movie in userSavedMovies" :key="movie.id">{{ movie.title }}</li>
       </ul>
     </div>
   </div>

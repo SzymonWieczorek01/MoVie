@@ -69,17 +69,17 @@ export default createStore({
     setUserSavedMovies(state, data){
       console.log("set Saved");
       state.userSavedMovies.push(data)
-      state.userSavedMoviesID.push(data.film_id)
+      state.userSavedMoviesID.push(data.id)
     },
     removeIdFromSavedMovies(state, id){
       console.log("Removed Saved");
-      state.userSavedMovies = state.userSavedMovies.filter(movie => movie.film_id != id)
+      state.userSavedMovies = state.userSavedMovies.filter(movie => movie.id != id)
       state.userSavedMoviesID = state.userSavedMoviesID.filter(movieId => movieId != id)
     },
     setUserWatchedMovies(state, data){
       console.log("set Watched");
       state.userWatchedMovies.push(data)
-      state.userWatchedMoviesID.push(data.film_id)
+      state.userWatchedMoviesID.push(data.id)
     },
     setUserDislikedMovies(state, id){
       console.log("set DDisliked");
@@ -97,6 +97,7 @@ export default createStore({
   },
   actions: {
     signIn({commit, state}, userCredential){
+      commit("setLoader", true)
       var email = userCredential.email
       var pass = userCredential.pass
       const auth = getAuth()
@@ -111,9 +112,13 @@ export default createStore({
         })
         .catch((error) => {
           state.signInErrorMessage = "Incorrect Credentials!"
+        })
+        .finally(() => {
+          commit("setLoader", false)
         });
     },
     createUser({commit, state}, userCredential){
+      commit("setLoader", true)
       var email = userCredential.email
       var pass = userCredential.pass
       const auth = getAuth()
@@ -131,6 +136,8 @@ export default createStore({
       })
       .catch((error) => {
         state.signUpErrorMessage = "Incorrect Email or Password!"
+      }).finally(() => {
+        commit("setLoader", false)
       });
     },
     getUserSavedMovies({commit, state}) {
@@ -142,7 +149,7 @@ export default createStore({
         querySnapshot.forEach((doc) => {
           var movieData = doc.data()
           if (movieData.user_email == state.userEmail){
-            movieData["id"] = doc.id
+            movieData["dbId"] = doc.id
             commit('setUserSavedMovies', movieData)
           }
           else {}
@@ -159,7 +166,7 @@ export default createStore({
         querySnapshot.forEach((doc) => {
           var movieData = doc.data()
           if (doc.data().user_email == state.userEmail){
-            movieData["id"] = doc.id
+            movieData["dbId"] = doc.id
             commit('setUserWatchedMovies', movieData)
           }
           else {}
@@ -174,7 +181,7 @@ export default createStore({
         querySnapshot.forEach((doc) => {
           var docData = doc.data()
           if (docData.user_email == state.userEmail){
-            commit('setUserDislikedMovies', docData.film_id)
+            commit('setUserDislikedMovies', docData.id)
           }
           else {}
       })

@@ -51,19 +51,20 @@ export default {
     },
     submitReview() {
       if (this.isValidReview && this.rating >= 1 && this.rating <= 5) {
-        const movieData = {
-          film_id: parseInt(this.movieId),
-          film_name: this.movieTitle,
+        var movieData = {
+          id: parseInt(this.movieId),
+          title: this.movieTitle,
           poster_path: this.moviePosterPath,
           user_email: this.userEmail,
           rating: this.rating,
           review: this.review
-      }
+        }
         addDoc(collection(this.fireStore, "watched_movies"), movieData)
         .then(doc => {
-          this.$store.commit("setUserWatchedMovies", movieData, doc.id)
+          movieData['dbId'] = doc.id
+          this.$store.commit("setUserWatchedMovies", movieData)
         });
-        this.$emit("submit");
+        this.$emit("submit", movieData);
       }
     }
   }
