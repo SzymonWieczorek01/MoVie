@@ -1,28 +1,27 @@
 <template>
     <input type="text" v-model="email" placeholder="Email" />
     <input type="password" v-model="pass" placeholder="Password" />
-    <button @click="signIn({email: email, pass: pass})" :disabled="isButtonDisabled">Login</button>
+    <button @click="createUser({email: email, pass: pass})" :disabled="isButtonDisabled">Register</button>
     <p v-if="errorMessage">{{ errorMessage }}</p>
-    <p v-if='signInErrorMessage'>{{ signInErrorMessage }}</p>
-    <button @click="signInWithGoogle" v-if="!isLogged"> Sign-in with Google </button>
+    <p v-if='signUpErrorMessage'>{{ signUpErrorMessage }}</p>
+    <p v-if="isLogged">{{ userName }}</p>
 </template>
 
 <script>
     import { mapState, mapActions } from 'vuex';
-    export default {
-        data () {
+    export default { 
+        data (){
             return {
                 email: '',
-                pass: '',
-                errorMessage: ''
+                pass: ''
             }
         },
-        name: "Login",
+        name: "SignUp",
         methods: { 
-            ...mapActions(["signInWithGoogle", "signIn"])
+            ...mapActions(["createUser"])
         },
         computed: {
-            ...mapState(['userName', 'isLogged', 'signInErrorMessage']),
+            ...mapState(['isLogged', 'signUpErrorMessage']),
             isButtonDisabled(){
                 return this.email.length == 0 || this.pass.length < 6
             }
@@ -40,7 +39,7 @@
                 if (newPass.length == 0 || newPass.length >= 6){
                     this.errorMessage = ""
                 }
-            }
         }
     }
+}
 </script>

@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import { GoogleAuthProvider } from "firebase/auth";
-import { getAuth, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import db from '../firebase/firebase'
 import { collection, getDocs, getFirestore } from "firebase/firestore"; 
 
@@ -25,7 +25,9 @@ export default createStore({
       fireStore: getFirestore(db),
       userWatchedMovies: [],
       userWatchedMoviesID: [],
-      showSearch: true
+      showSearch: true,
+      signInErrorMessage: '',
+      signUpErrorMessage: ''
     };
   },
   mutations: {
@@ -94,6 +96,43 @@ export default createStore({
     },
   },
   actions: {
+    signIn({commit, state}, userCredential){
+      var email = userCredential.email
+      var pass = userCredential.pass
+      const auth = getAuth()
+      signInWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+          var userData = {
+            "displayName": email,
+            "email": email
+          }
+          state.signInErrorMessage = ""
+          commit("setUserData", userData)
+        })
+        .catch((error) => {
+          state.signInErrorMessage = "Incorrect Credentials!"
+        });
+    },
+    createUser({commit, state}, userCredential){
+      var email = userCredential.email
+      var pass = userCredential.pass
+      const auth = getAuth()
+      createUserWithEmailAndPassword(auth, email, pass)
+      .then((userCredential) => {
+        signInWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+          var userData = {
+            "displayName": email,
+            "email": email
+          }
+          state.signUpErrorMessage = ""
+          commit("setUserData", userData)
+        })
+      })
+      .catch((error) => {
+        state.signUpErrorMessage = "Incorrect Email or Password!"
+      });
+    },
     getUserSavedMovies({commit, state}) {
       console.log("get Saved");
       state.userSavedMoviesID = []

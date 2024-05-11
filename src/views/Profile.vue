@@ -26,7 +26,19 @@ import { mapState } from 'vuex';
 export default {
   name: 'Profile',
   computed: {
-    ...mapState(['userEmail', 'userName', 'userWatchedMovies', 'userSavedMovies'])
+    ...mapState(['userEmail', 'userName', 'userWatchedMovies', 'userSavedMovies', 'isLogged'])
+  },
+  watch: {
+    isLogged(newLogged, oldLogged) {
+        if (newLogged == false){
+            this.$router.push({ name: 'Home'})
+        }
+      }
+  },
+  created() {
+    if (!this.isLogged) {
+      this.$router.push({ name: 'Home'})
+    }
   }
 };
 </script>

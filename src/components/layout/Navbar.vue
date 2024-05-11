@@ -18,7 +18,8 @@
       <li v-if="isLogged"><button class="movie-swipe"><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></button></li>
       <li v-if="isLogged"><router-link to="/profile" exact-active-class="active-link">{{ userName }}</router-link></li>
       <li v-if="isLogged" @click="signOut">Logout</li>
-      <li v-else><router-link to="/login" exact-active-class="active-link">Login</router-link></li>
+      <li v-if="!isLogged"><router-link to="/login" exact-active-class="active-link">Login</router-link></li>
+      <li v-if="!isLogged"><router-link to="/sign-up" exact-active-class="active-link">Sign Up</router-link></li>
     </ul>
   </nav>
 </template>
