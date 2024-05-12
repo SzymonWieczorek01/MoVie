@@ -25,9 +25,9 @@
       <li>
         <ul class="secondary-navigation">
           <li v-if="isLogged" class="user-name"><router-link to="/profile" exact-active-class="active-link">{{ userName }}</router-link></li>
-          <li v-if="isLogged" @click="signOut">Logout</li>
-          <li v-if="!isLogged"><router-link to="/login" exact-active-class="active-link">Login</router-link></li>
-          <li v-if="!isLogged"><router-link to="/sign-up" exact-active-class="active-link">Sign Up</router-link></li>
+          <li v-if="isLogged" @click="signOut" class="sign-out">Logout</li>
+          <li v-if="!isLogged" class="login-button"><router-link to="/login" exact-active-class="active-link">Login</router-link></li>
+          <li v-if="!isLogged" class="sign-up-button"><router-link to="/sign-up" exact-active-class="active-link">Sign Up</router-link></li>
         </ul>
       </li>
     </ul>
@@ -66,13 +66,6 @@ export default {
   padding: 0;
   display: flex;
   justify-content: space-between;
-}
-
-.primary-navigation,
-.secondary-navigation {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
 }
 
 .movie-swipe{
@@ -132,18 +125,28 @@ export default {
   margin: 0 20px;
 }
 
-.navbar ul li a {
+.navbar .primary-navigation li a {
   text-decoration: none;
   color: #ffffff;
-  font-weight: 500;
-  transition: font-size 1s ease ;
+  font-weight: 600;
+  transition: color 1s ease ;
 }
 
-.navbar ul li a:hover {
-  font-size: 110%;
+.navbar .secondary-navigation .sign-out,
+.navbar .secondary-navigation li a {
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+  transition: color 1s ease ;
 }
-.navbar ul li .active-link {
-  color: #ffffff;
+
+.navbar .secondary-navigation .sign-out:hover,
+.navbar .secondary-navigation li a:hover {
+  color: #887AE3;
+  cursor: pointer;
+}
+.navbar .secondary-navigation li .active-link {
+  color: #887AE3;
 }
 
 .search-component {
