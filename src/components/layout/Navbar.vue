@@ -117,7 +117,7 @@ export default {
   align-items: center;
   padding: 0;
   margin: 0;
-  background: #ffffff;
+  background: #cfcfcf;
   padding: 10px 20px;
 }
 
