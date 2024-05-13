@@ -1,24 +1,32 @@
 <template>
+<SearchMovie ref="SearchMovie" :showButton="false" @newQuery="$refs.SearchMovie.updateQuery()"/>
+  <div class="search-and-toggle">
+    <button @click="toggleView" class="toggle-view-button">
+      <span v-if="asTable">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </span>
+      <span v-else>
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="17" width="18" height="4"/></svg>
+      </span>
+    </button>
+  </div>
   <div>
-    <SearchMovie ref="SearchMovie" :showButton="false" @newQuery="$refs.SearchMovie.updateQuery()"/>
-    <div>
-      <h1 v-if="query">Search Results for {{ query }}</h1>
-      <h1 v-if="with_genres && !query">Search Results with Genre {{ genreNames([with_genres]) }}</h1>
-      <button @click="toggleView" style="font-size: 15px;">{{ asTable ? 'Switch to Cards View' : 'Switch to Table View' }}</button>
-      <div v-if="!asTable">
-        <DisplayMoviesAsCards :movies="searchResults"/>
-      </div>
-      <div v-if="asTable">
-        <DisplayMoviesAsTable :results="searchResults"/>
-      </div>
-      <div>
-        <button @click="decrementSearchPage" v-if="currentSearchPage > 1">Previous</button>
-        <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages">Next</button>
-        <div>Page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
-      </div>
+    <h1 v-if="query">Search Results for {{ query }}</h1>
+    <h1 v-if="with_genres && !query">Search Results with Genre {{ genreNames([with_genres]) }}</h1>
+    <div v-if="!asTable">
+      <DisplayMoviesAsCards :movies="searchResults"/>
+    </div>
+    <div v-if="asTable">
+      <DisplayMoviesAsTable :results="searchResults"/>
+    </div>
+    <div class="pagination">
+      <button @click="decrementSearchPage" v-if="currentSearchPage > 1">Previous</button>
+      <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages">Next</button>
+      <div>Page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
     </div>
   </div>
 </template>
+
 
 <script>
 import { mapState, mapActions } from 'vuex';
@@ -33,7 +41,7 @@ export default {
   },
   data() {
     return {
-      asTable: false
+      asTable: true
     };
   },
   watch: {
@@ -106,3 +114,75 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.search-and-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #FFF; /* Clean background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.SearchMovie {
+  flex-grow: 1; /* Allows the SearchMovie component to grow and fill available space */
+  margin-right: 10px; /* Provides spacing between the search bar and the toggle button */
+}
+
+.toggle-view-button {
+  background-color: #6a1b9a; /* Custom purple for an attractive call to action */
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.toggle-view-button:hover {
+  background-color: #4a148c; /* Darker purple on hover for interaction feedback */
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #6a1b9a;
+  border: 1px solid #ddd;
+  color: white;
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #4a148c;
+}
+
+@media (max-width: 768px) {
+  .search-and-toggle {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .SearchMovie, .toggle-view-button {
+    width: 100%; /* Ensures full width on smaller screens */
+    margin-right: 0; /* Adjust margin for mobile layout */
+  }
+  .toggle-view-button {
+    margin-top: 10px; /* Provides some space between the search bar and button */
+  }
+}
+</style>

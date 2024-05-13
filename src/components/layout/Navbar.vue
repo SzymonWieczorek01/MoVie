@@ -132,7 +132,7 @@ export default {
   align-items: center;
   padding: 0;
   margin: 0;
-  background: #cfcfcf;
+  background: white;
   padding: 10px 20px;
 }
 
@@ -142,7 +142,7 @@ export default {
 
 .navbar .primary-navigation li a {
   text-decoration: none;
-  color: #ffffff;
+  color: white;
   font-weight: 600;
   transition: color 1s ease ;
 }
