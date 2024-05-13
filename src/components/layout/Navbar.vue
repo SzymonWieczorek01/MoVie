@@ -2,7 +2,7 @@
   <nav class="navbar">
     <ul class="navigation">
       <li>
-        <ul class="primary-navigation">
+        <ul class="movie-logo">
           <li><router-link to="/" exact-active-class="active-link">
             <svg width="100" height="98" viewBox="0 0 100 98" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <rect y="-14" width="100" height="112" fill="url(#pattern0_3269_21)"/>
@@ -15,6 +15,10 @@
             </svg>
 
           </router-link></li>
+        </ul>
+      </li>
+      <li>
+        <ul class="primary-navigation">
           <li class="centered-items">
             <li v-if="showSearch"><search-component class="nav-item" /></li>
             <li v-if="isLogged"><button class="saved-movies"><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></button></li>
@@ -53,14 +57,25 @@ export default {
 </script>
 
 <style scoped>
+.movie-logo {
+  margin-right: auto;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cfcfcf;
+}
 
 .centered-items {
-  display: flex; /* Use flexbox */
-  justify-content: center; /* Center items horizontally */
-  align-items: center; /* Center items vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .navigation {
+  width:100%;
   list-style-type: none;
   margin: 0;
   padding: 0;
