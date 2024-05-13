@@ -50,17 +50,16 @@ export default {
 .search-bar {
   display: flex;
   align-items: center;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 20px;
 }
 
 .search-input, .genre-select, .year-input, .search-button {
   padding: 6px 10px;
   margin-right: 8px;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 20px;
   font-size: 15px;
 }
 
@@ -79,13 +78,14 @@ export default {
   border-color: #007bff;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1.1em;
-  border-radius: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  border-radius: 13px;
+  border-color: transparent;
 }
 
 .search-button:hover {
-  background-color: #9A6EBB; /* Lighter violet on hover */
   transform: scale(1.05);
-  transition: background-color 0.3s, transform 0.3s;
+  transition: transform 0.3s;
 }
 </style>

@@ -87,18 +87,18 @@ export default {
 /* Rectangle 4 */
   /* Rectangle 4 */
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  font-size:90%;
+  font-size:100%;
   color:white;
 
-  width: 124px;
-  height: 30px;
+  width: 130px;
+  height: 38px;
   left: 680px;
   top: 22px;
 
   background: linear-gradient(90deg, #887AE3 0.3%, #30345A 100.05%, #30345A 100.06%);
   /* signup */
   box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  border-radius: 13px;
   border: transparent;
   transition: transform 0.3s ease-out;
 
@@ -106,15 +106,15 @@ export default {
 .saved-movies{
   /* Rectangle 4 */
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  font-size:90%;
+  font-size:100%;
   color:white;
-  width: 124px;
-  height: 30px;
+  width: 135px;
+  height: 38px;
   
   background: linear-gradient(90deg, #1B1A1A -1.58%, #887AE3 102.63%);
   /* signup */
   box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  border-radius: 13px;
   border: transparent;
 
   transition: transform 0.3s ease-out;
