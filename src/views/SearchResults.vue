@@ -20,9 +20,9 @@
       <DisplayMoviesAsTable :results="searchResults"/>
     </div>
     <div class="pagination">
-      <button @click="decrementSearchPage" v-if="currentSearchPage > 1">Previous</button>
-      <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages">Next</button>
-      <div>Page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
+      <button @click="decrementSearchPage" v-if="currentSearchPage > 1" class="previous-button">🡸 Previous</button>
+      <div class="number-of-pages">page {{ currentSearchPage }} of {{ searchTotalPages }}</div>
+      <button @click="incrementSearchPage" v-if="currentSearchPage < searchTotalPages" class="next-button">Next 🡺</button>
     </div>
   </div>
 </template>
@@ -116,6 +116,13 @@ export default {
 </script>
 
 <style scoped>
+.number-of-pages{
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color:rgba(0, 0, 0, 0.541);
+  font-weight: 470;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 .search-and-toggle {
   display: flex;
   align-items: center;
@@ -159,17 +166,36 @@ export default {
   margin-top: 20px;
 }
 
-.pagination button {
-  background-color: #6a1b9a;
-  border: 1px solid #ddd;
+.pagination .next-button {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  background: linear-gradient(90deg, #887AE3  -1.58%, #1B1A1A 102.63%);
+  /* signup */
+  box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
+  border-radius: 13px;
+  border: transparent;
   color: white;
-  padding: 10px 15px;
+  padding: 6px 15px;
   margin: 5px;
   cursor: pointer;
 }
 
-.pagination button:hover {
-  background-color: #4a148c;
+.pagination .previous-button {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  background: linear-gradient(90deg, #1B1A1A -1.58%, #887AE3 102.63%);
+  /* signup */
+  box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
+  border-radius: 13px;
+  border: transparent;
+  color: white;
+  padding: 6px 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.pagination .next-button:hover {
+  transform: scale(1.01,1.01);
 }
 
 @media (max-width: 768px) {

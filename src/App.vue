@@ -3,6 +3,7 @@
     <loading-component/>
     <navbar />
     <router-view/>
+    <footer/>
   </div>
 </template>
 
@@ -11,6 +12,7 @@
     import Navbar from './components/layout/Navbar.vue'
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { mapActions, mapState } from 'vuex';
+    import Footer from './components/layout/Footer.vue';
 
     export default {
     data() {
@@ -20,7 +22,8 @@
     },
     components: {
         Navbar,
-        LoadingComponent
+        LoadingComponent,
+        Footer
     },
     computed: {
       ...mapState(['isLogged'])
@@ -50,7 +53,7 @@
 
 /* For Firefox */
 * {
-  scrollbar-color: #887AE3 #f3f3f3; /* Thumb color and Track color */
+  scrollbar-color: #8173da #f3f3f3; /* Thumb color and Track color */
 }
 
 body, html {
