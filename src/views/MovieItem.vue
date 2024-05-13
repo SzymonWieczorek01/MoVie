@@ -1,13 +1,36 @@
 <template>
-  <button @click="$router.go(-1)" style="font-size: 24px;">
-    &#8592;
-  </button>
+  <a @click="$router.go(-1)" class="previous round">&#8249;</a>
   <div class="movie-container">
     <MovieDescription :movieData="movieData" v-if="movieData" />
   </div>
   
 </template>
 
+<style scoped>
+a {
+  background: linear-gradient(90deg, #887AE3 0.3%, #30345A 100.05%, #30345A 100.06%);
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 25px;
+  margin-left: 80px;
+  font-size: 40px;
+  text-align: center;
+  background-color: #f1f1f1;
+  color: white;
+  transition: transform 0.3s ease-out;
+  border-radius: 10px;
+  border: transparent;
+}
+
+a:hover {
+  transform: scale(1.2);
+  cursor: default;
+}
+
+.round {
+  border-radius: 50%;
+}
+</style>
 
 <script>
 import { mapState, mapActions } from 'vuex';
