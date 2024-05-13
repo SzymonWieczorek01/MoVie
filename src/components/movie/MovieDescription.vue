@@ -18,9 +18,11 @@
                     @ready="onReady"
                     ref="youtube"
                     class="youtube-player"/> <br>
-                    <button v-if="isLogged && isInSaved" class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
-                    <AddOpinion v-if="movieData.id" v-model:showModal="showModal" :movieTitle="movieData.title" :movieId="movieData.id" :moviePosterPath="movieData.poster_path" @submit="handleOpinionSubmit" @close="showModal = false"/>
-                    <button v-if="isLogged && isInWacthed" class="opinion-button" @click="showModal = true">Add Opinion</button>
+                    <div class="centered-items">
+                      <button v-if="isLogged && isInSaved" class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
+                      <AddOpinion v-if="movieData.id" v-model:showModal="showModal" :movieTitle="movieData.title" :movieId="movieData.id" :moviePosterPath="movieData.poster_path" @submit="handleOpinionSubmit" @close="showModal = false"/>
+                      <button v-if="isLogged && isInWacthed" class="opinion-button" @click="showModal = true">Add Opinion</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,6 +166,50 @@ export default {
   width: 100%;
   height: 300px;
   margin-bottom: 20px;
+}
+
+.watch-list-button{
+/* Rectangle 4 */
+  /* Rectangle 4 */
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size:90%;
+  color:white;
+
+  width: 200px;
+  height: 30px;
+  left: 680px;
+  top: 22px;
+
+  background: linear-gradient(90deg, #887AE3 0.3%, #30345A 100.05%, #30345A 100.06%);
+  /* signup */
+  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border: transparent;
+  transition: transform 0.3s ease-out;
+
+}
+.opinion-button{
+  /* Rectangle 4 */
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size:90%;
+  color:white;
+  width: 200px;
+  height: 30px;
+  
+  background: linear-gradient(90deg, #1B1A1A -1.58%, #887AE3 102.63%);
+  /* signup */
+  box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border: transparent;
+
+  transition: transform 0.3s ease-out;
+
+}
+.centered-items {
+  display: flex; /* Use flexbox */
+  gap: 30px;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
 }
 
 button {
