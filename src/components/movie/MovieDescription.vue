@@ -1,42 +1,55 @@
 <template>
-    <div class="movie-image">
-      <img :src="'https://image.tmdb.org/t/p/w500' + movieData.poster_path" alt="Movie Poster" />
+    <div class="movie-container">
+        <div class="movie-poster">
+            <img :src="'https://image.tmdb.org/t/p/w500' + movieData.poster_path" alt="Movie Poster" />
+        </div>
+        <div class="movie-content">
+            <div class="movie-details">
+                <h2>{{ movieData.title }}</h2>
+                <h3 v-if="movieData.original_title">Original Title: {{ movieData.original_title }}</h3>
+                <p class="tagline" v-if="movieData.tagline">"{{ movieData.tagline }}"</p>
+                <p v-if="movieData.overview">{{ movieData.overview }}</p>
+                <div class="additional-details">
+                    <p><strong>Status:</strong> {{ movieData.status }}</p>
+                    <p><strong>Genres:</strong> {{ parsedGenres }}</p>
+                    <p><strong>Origin Countries:</strong> {{ parsedCountries }}</p>
+                  <YouTube 
+                    :src="youtubeLink"
+                    @ready="onReady"
+                    ref="youtube"
+                    class="youtube-player"/> <br>
+                    <button v-if="isLogged && isInSaved" class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
+                    <AddOpinion v-if="movieData.id" v-model:showModal="showModal" :movieTitle="movieData.title" :movieId="movieData.id" :moviePosterPath="movieData.poster_path" @submit="handleOpinionSubmit" @close="showModal = false"/>
+                    <button v-if="isLogged && isInWacthed" class="opinion-button" @click="showModal = true">Add Opinion</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="movie-details">
-      <h2>{{ movieData.title }}</h2>
-      <h3 v-if="movieData.original_title">Original Title: {{ movieData.original_title }}</h3>
-      <p class="tagline" v-if="movieData.tagline">"{{ movieData.tagline }}"</p>
-      <p v-if="movieData.overview">{{ movieData.overview }}</p>
-      <div class="additional-details">
-        <p><strong>Status:</strong> {{ movieData.status }}</p>
-        <p><strong>Genres:</strong> {{ parsedGenres }}</p>
-        <p><strong>Origin Countries:</strong> {{ parsedCountries }}</p>
-        <p v-if="movieOpinions.length > 0">Movie Opinions:</p>
-          <ul v-if="movieOpinions.length > 0">
+    <div class="movie-container">
+        <ul v-if="movieOpinions.length > 0">
             <li v-for="opinion in movieOpinions" :key="opinion.id">
-                <strong>{{ opinion.user_email }}</strong> thinks <em>{{ opinion.title }}</em> is <em>{{ opinion.review }}</em> and rates this film as <span>{{ opinion.rating }}</span>.
+                <strong>{{ opinion.user_email }}</strong><br><em>{{ opinion.review }}</em> <span class="star-filled">{{ "★".repeat(opinion.rating) }}</span>.
             </li>
-          </ul>
-      </div>
-      <button v-if="isLogged && isInSaved" class="watch-list-button" @click="addToWatchList">Add to Watch List</button>
-      <AddOpinion v-if="movieData.id" v-model:showModal="showModal" :movieTitle="movieData.title" :movieId="movieData.id" :moviePosterPath="movieData.poster_path" @submit="handleOpinionSubmit" @close="showModal = false"/>
-      <button v-if="isLogged && isInWacthed" class="opinion-button" @click="showModal = true">Add Opinion</button>
+        </ul>
     </div>
 </template>
+
 
 <script>
 import AddOpinion from "./AddOpinion.vue";
 import { mapState, mapActions } from 'vuex';
 import { collection, getDocs, getFirestore, addDoc } from "firebase/firestore"; 
+import YouTube from 'vue3-youtube';
 
 export default {
   name: 'MovieDescription',
-  components: { AddOpinion },
+  components: { AddOpinion, YouTube },
   props: {
     movieData: null
   },
   data () {
     return {
+        youtubeLink: '',
         showModal: false,
         movieOpinions: []
     }
@@ -57,6 +70,25 @@ export default {
     }
   },
   methods: {
+    onReady() {
+        this.getYoutubeKey();
+    },
+    getYoutubeKey() {
+        this.$store.commit('setLoading', true);
+        fetch(`https://api.kinocheck.de/movies?tmdb_id=${this.movieData.id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.trailer && data.trailer.youtube_video_id) {
+                this.youtubeLink = `https://www.youtube.com/watch?v=${data.trailer.youtube_video_id}`;
+            } else {
+                console.log('YouTube video ID not found in the API response');
+            }
+        }).catch(error => {
+            console.error('Error fetching movies:', error);
+        }).finally(() => {
+            this.$store.commit('setLoading', false);
+        });
+    },
     addToWatchList(){
       var movieData = {
           id: parseInt(this.movieData.id),
@@ -92,61 +124,86 @@ export default {
 </script>
 
 <style scoped>
-.movie-image img {
-  width: 100%;
+.star-rating {
+  display: inline-block;
+  font-size: 1.5em;
+  color: #d3d3d3;
+  cursor: pointer;
+}
+
+.star-filled {
+  color: #ffd700;
+}
+.movie-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px; /* Added padding around the entire movie container */
+  background-color: #fff; /* Optional: adds background color to make the container stand out */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds subtle shadow for depth */
+}
+
+.movie-poster {
+  flex: 0 1 500px;
   max-width: 500px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-right: 20px;
+  padding: 10px; /* Padding around the poster image */
+  background-color: #f0f0f0; /* Slight background to distinguish the poster area */
 }
 
-.movie-details {
-  text-align: center;
-  padding: 20px;
+.movie-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px; /* Consistent padding for content */
 }
 
-.movie-details h2 {
-  color: #333;
-  margin-bottom: 0;
-}
-
-.movie-details h3 {
-  color: #666;
-  font-size: 1.2em;
-  margin-top: 5px;
-}
-
-.tagline {
-  font-style: italic;
-  color: #888;
-  margin-top: 0;
-}
-
-.additional-details p {
-  color: #444;
-}
-
-.youtube-player {
-  margin-top: 20px;
+.trailer iframe {
   width: 100%;
-  max-width: 720px;
+  height: 300px;
+  margin-bottom: 20px;
 }
 
-.watch-list-button, .opinion-button {
+button {
   padding: 10px 20px;
-  margin: 10px;
   border: none;
   border-radius: 5px;
+  background-color: green;
+  color: white;
   cursor: pointer;
-  font-weight: bold;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.watch-list-button {
-  background-color: #4CAF50; /* Green */
-  color: white;
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.opinion-button {
-  background-color: #008CBA; /* Blue */
-  color: white;
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f8f9fa;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-left: 5px solid #2575fc;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .movie-container {
+    flex-direction: column;
+    padding: 10px; /* Reduced padding for smaller screens */
+  }
+  .movie-poster, .movie-content {
+    flex: 1 1 100%;
+  }
+  .trailer iframe {
+    height: auto;
+  }
 }
 </style>

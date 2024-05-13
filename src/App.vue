@@ -3,14 +3,12 @@
     <loading-component/>
     <navbar />
     <router-view/>
-    <footer-component />
   </div>
 </template>
 
 <script>
     import LoadingComponent from './components/layout/Loading.vue';
     import Navbar from './components/layout/Navbar.vue'
-    import FooterComponent from './components/layout/Footer.vue'
     import { getAuth, onAuthStateChanged } from "firebase/auth";
     import { mapActions, mapState } from 'vuex';
 
@@ -22,7 +20,6 @@
     },
     components: {
         Navbar,
-        FooterComponent,
         LoadingComponent
     },
     computed: {

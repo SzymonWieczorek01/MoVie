@@ -62,7 +62,11 @@ export default createStore({
       state.genres = genres;
     },
     setUserData(state, results){
-      state.userName = results.displayName;
+      if (results.displayName) {
+        state.userName = results.displayName
+      } else{
+        state.userName = results.email;
+      }
       state.userEmail = results.email;
       state.isLogged = true;
     },
@@ -229,6 +233,7 @@ export default createStore({
       fetch(link)
         .then(response => response.json())
         .then(data => {
+          console.log(data)
           commit('setSearchTotalPages', data.total_pages);
           commit('setSearchResults', data.results);
         }).catch(error => {

@@ -1,21 +1,150 @@
 <template>
   <div class="home">
-    <h1>Welcome to My Movie App</h1>
-    <p>Swipe right to like a movie, left to dislike, or down if you've already watched it.</p>
-    <swipe-container/>
+    <div class="header">
+      <h1>Welcome to MoVIE</h1>
+      <p>Everything was done for you, the easy way to find a film that you will watch today was created, your only task - save, explore and comment. Just swipe to left if you don't like movie or to right if movie fits you just right. Without wasting words lets...</p>
+    </div>
+    <button class="start-button" @click.prevent="redirectToPage">Start Swiping!</button>
+    <h1>Popular Searches</h1>
+    <transition name="fade" mode="out-in">
+      <div class="movie-card" v-if="featuredMovie" :key="featuredMovie.id">
+        <img :src="'https://image.tmdb.org/t/p/w500' + featuredMovie.poster_path" alt="Featured Movie" class="featured-movie-image"/>
+        <div class="movie-info">
+          <h2>{{ featuredMovie.title }}</h2>
+          <p>{{ featuredMovie.overview }}</p>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
+  data() {
+    return {
+      featuredMovie: null,
+      movies: [],
+      currentMovieIndex: 0,
+      intervalId: null
+    }
+  },
+  computed: {
+    ...mapState(["isLogged"]),
+  },
+  methods: {
+    redirectToPage() {
+      if (this.isLogged) {
+        this.$router.push({ name: "Swipe Movies" });
+      } else {
+        this.$router.push({ name: "Login" });
+      }
+    },
+    fetchMovies() {
+      this.$store.commit('setLoading', true);
+      fetch(`https://api.themoviedb.org/3/movie/popular?api_key=67cdbbd1a17bf16dff493523ff9c18d4&page=1`)
+        .then(response => response.json())
+        .then(data => {
+          this.movies = data.results;
+          this.featuredMovie = this.movies[0];
+          this.movies.forEach(movie => this.preloadImage(movie.poster_path));
+          this.startMovieRotation();
+        })
+        .catch(error => console.error('Error fetching movies:', error))
+        .finally(() => this.$store.commit('setLoading', false));
+    },
+    preloadImage(path) {
+      const img = new Image();
+      img.src = `https://image.tmdb.org/t/p/w500${path}`;
+    },
+    startMovieRotation() {
+      this.intervalId = setInterval(() => {
+        if (this.currentMovieIndex < this.movies.length - 1) {
+          this.currentMovieIndex++;
+        } else {
+          this.currentMovieIndex = 0;
+        }
+        this.featuredMovie = this.movies[this.currentMovieIndex];
+      }, 7000);
+    }
+  },
+  created() {
+    this.fetchMovies();
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId);
+  }
 }
 </script>
 
-<style>
+<style scoped>
 .home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #FFFFFF; /* White background for a clean look */
+  color: #000000; /* Black text for high contrast and visibility */
   text-align: center;
-  padding: 20px;
+}
+
+.header h1, .header p {
+  transition: opacity 0.3s ease-in-out;
+  color: #000000; /* Black text for headings and paragraphs */
+}
+
+.header p {
+  padding: 0 10%; /* Padding on left and right to prevent text from touching the edge */
+}
+
+.movie-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for depth */
+  background-color: #F4F1FF; /* Very light violet, almost white for the card background */
+}
+
+.featured-movie-image {
+  width: 40%;
+  height: auto;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.movie-info {
+  padding: 10%;
+  background-color: #ECE9F9; /* Light lavender, adds a subtle distinction from the card background */
+  color: #000000; /* Black text for movie information */
+}
+
+.start-button {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  background: linear-gradient(90deg, #1B1A1A -1.58%, #887AE3 102.63%);
+  box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.start-button:hover {
+  background-color: #9A6EBB; /* Lighter violet on hover */
+  transform: scale(1.05);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
