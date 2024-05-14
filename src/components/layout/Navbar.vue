@@ -86,12 +86,12 @@ export default {
 }
 
 .movie-swipe{
-/* Rectangle 4 */
   /* Rectangle 4 */
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-size:100%;
   color:white;
 
+  margin-left: 20px;
   width: 130px;
   height: 38px;
   left: 680px;
@@ -109,6 +109,7 @@ export default {
   /* Rectangle 4 */
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-size:100%;
+  margin-left: 20px;
   color:white;
   width: 135px;
   height: 38px;
