@@ -8,7 +8,7 @@
 4. [Opis techniczny](#opis-techniczny)
 
 ## Projekt figma 
-Link do [projektu](https://www.figma.com/file/CjcFrQW7Gh0pelqu0o7BEk/MoVie?type=design&node-id=0%3A1&mode=design&t=Ku6l5uIOHKtc1QPe-1) <-
+[Link do projektu](https://www.figma.com/file/CjcFrQW7Gh0pelqu0o7BEk/MoVie?type=design&node-id=0%3A1&mode=design&t=Ku6l5uIOHKtc1QPe-1) <- Figma
 
 ## Opis aplikacji
 > Aplikacja umożliwiająca użytkownikom tworzenie swojej kolekcji ulubionych filmów. Użytkownicy mają możliwość dodawania nowych pozycji, oceniania ich, dodawania recenzji i szukania konkretnych filmów.
@@ -41,6 +41,11 @@ Link do [projektu](https://www.figma.com/file/CjcFrQW7Gh0pelqu0o7BEk/MoVie?type=
 ---
 
 ### Opis techniczny
+### Wykorzystywane API
+> [TMDB](https://developer.themoviedb.org/docs/getting-started) - Baza filmów
+
+> [KinoCheck](https://api.kinocheck.com/) - Baza trailerów
+
 #### Wykorzystane technologie
 
 - Vue.js
