@@ -62,6 +62,7 @@
 <style scoped>
 .login-container {
   display: flex;
+  margin-top: -70px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -106,12 +107,15 @@ input[type="email"], input[type="password"] {
 
 button {
   padding: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
   color: white;
-  background-color: #4a67d6;
+  background: linear-gradient(90deg, rgba(213, 149, 255, 0.788) 0.3%, #30345afd 100.05%, #30345a42 100.06%);
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 1s ease;
 }
 
 button:disabled {
@@ -120,7 +124,10 @@ button:disabled {
 }
 
 button:hover:not(:disabled) {
-  background-color: #3658b3;
+  background: white;
+  color:black;
+  border: 1px solid;
+  border-color: rgb(145, 56, 187);
 }
 
 .error-message {
