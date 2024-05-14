@@ -5,13 +5,13 @@
       <p>Everything was done for you, the easy way to find a film that you will watch today was created, your only task - save, explore and comment. Just swipe to left if you don't like movie or to right if movie fits you just right. Without wasting words lets...</p>
     </div>
     <button class="start-button" @click.prevent="redirectToPage">Start Swiping!</button>
-    <h1>Popular Searches</h1>
+    <h1 class="popular-searches">Popular Searches</h1>
     <transition name="fade" mode="out-in">
       <div class="movie-card" v-if="featuredMovie" :key="featuredMovie.id">
         <div class="movie-content">
           <img :src="'https://image.tmdb.org/t/p/w500' + featuredMovie.poster_path" alt="Featured Movie" class="featured-movie-image"/>
           <div class="movie-info">
-            <h2>{{ featuredMovie.title }}</h2>
+            <h1>{{ featuredMovie.title }}</h1>
             <p class="movie-description">{{ featuredMovie.overview }}</p>
           </div>
         </div>
@@ -82,6 +82,9 @@ export default {
 </script>
 
 <style scoped>
+.popular-searches{
+  margin-top: 40px;
+}
 .home {
   display: flex;
   flex-direction: column;
@@ -91,15 +94,22 @@ export default {
   background-color: #FFFFFF; /* White background for a clean look */
   color: #000000; /* Black text for high contrast and visibility */
   text-align: center;
-  background: linear-gradient(to top, #887ae34b, #FFFFFF,  #887ae315, #FFFFFF, #FFFFFF);
+  background: linear-gradient(to top, #887ae375, #FFFFFF,  #887ae315, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF);
 }
 
+.header h1 {
+  margin-top: 50px;
+  color:rgb(0, 0, 0);
+  text-shadow: 5px 5px 5px #7e24d18c;
+}
 .header h1, .header p {
   transition: opacity 0.3s ease-in-out;
-  color: #000000; /* Black text for headings and paragraphs */
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .header p {
+  text-align: left;
+  color: #000000;
   padding: 0 10%; /* Padding on left and right to prevent text from touching the edge */
 }
 
@@ -109,8 +119,10 @@ export default {
   justify-content: center;
   margin-bottom: 20px;
   border-radius: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   overflow: hidden;
   width: 80%;
+  border-radius: 30px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for depth */
   background-color: #F4F1FF; /* Very light violet, almost white for the card background */
 }
@@ -123,13 +135,17 @@ export default {
 
 .movie-info {
   padding: 10%;
-  background-color: #ECE9F9; /* Light lavender, adds a subtle distinction from the card background */
+  text-align: left;
+  border-radius: 30px;
+  background-color: #a896f511; /* Light lavender, adds a subtle distinction from the card background */
   color: #000000; /* Black text for movie information */
 }
 
 .start-button {
   padding: 10px 20px;
   font-size: 1.1em;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
   background: linear-gradient(90deg, #1B1A1A -1.58%, #887AE3 102.63%);
   box-shadow: 1px 4px 5px -1px rgba(0, 0, 0, 0.25);
   color: white;
