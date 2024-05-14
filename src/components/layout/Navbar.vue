@@ -21,8 +21,11 @@
         <ul class="primary-navigation">
           <li class="centered-items">
             <li v-if="showSearch"><search-component class="nav-item" /></li>
-            <li v-if="isLogged"><button class="saved-movies"><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></button></li>
-            <li v-if="isLogged"><button class="movie-swipe"><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></button></li>
+          </li>
+          <!-- Moved buttons outside the centered-items div -->
+          <li class="centered-items button-container" v-if="isLogged">
+            <button class="saved-movies"><router-link to="/saved-movies" exact-active-class="active-link">Saved Movies</router-link></button>
+            <button class="movie-swipe"><router-link to="/swipe-movies" exact-active-class="active-link">Movie Swipe</router-link></button>
           </li>
         </ul>
       </li>
@@ -37,7 +40,6 @@
     </ul>
   </nav>
 </template>
-
 
 <script>
 import SearchComponent from '../movie/SearchMovie.vue';
@@ -170,7 +172,7 @@ export default {
   justify-content: flex-end;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1224px) {
   .navbar ul {
     flex-direction: column;
   }
@@ -189,6 +191,17 @@ export default {
   color: rgb(0, 0, 0);
   font-size: initial;
 }
+
+/* Media Query for Responsive Layout */
+@media (max-width: 1224px) {
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button-container button {
+    margin-top: 10px;
+  }
+}
 </style>
-
-

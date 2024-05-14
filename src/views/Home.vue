@@ -8,10 +8,12 @@
     <h1>Popular Searches</h1>
     <transition name="fade" mode="out-in">
       <div class="movie-card" v-if="featuredMovie" :key="featuredMovie.id">
-        <img :src="'https://image.tmdb.org/t/p/w500' + featuredMovie.poster_path" alt="Featured Movie" class="featured-movie-image"/>
-        <div class="movie-info">
-          <h2>{{ featuredMovie.title }}</h2>
-          <p>{{ featuredMovie.overview }}</p>
+        <div class="movie-content">
+          <img :src="'https://image.tmdb.org/t/p/w500' + featuredMovie.poster_path" alt="Featured Movie" class="featured-movie-image"/>
+          <div class="movie-info">
+            <h2>{{ featuredMovie.title }}</h2>
+            <p class="movie-description">{{ featuredMovie.overview }}</p>
+          </div>
         </div>
       </div>
     </transition>
@@ -146,5 +148,63 @@ export default {
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
+}
+/* Media Query for Responsive Layout */
+@media (max-width: 768px) {
+  .header h1, .header p {
+    font-size: 1.2rem;
+  }
+
+  .header p {
+    padding: 0 5%;
+  }
+
+  .start-button {
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+
+  .movie-card {
+    width: 90%;
+    flex-direction: column;
+  }
+
+  .movie-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Enable vertical scrolling for the container */
+  }
+
+  .featured-movie-image {
+    width: 100%;
+    margin-bottom: 20px; /* Add space between image and text */
+  }
+
+  .movie-info {
+    padding: 8px;
+  }
+
+  .movie-description {
+    max-height: 200px; /* Set a maximum height for the description */
+    overflow-y: auto; /* Enable vertical scrolling for the description */
+  }
+}
+
+/* For screens wider than 768px */
+@media (min-width: 769px) {
+  .movie-content {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .featured-movie-image {
+    width: 40%; /* Adjust image width for wider screens */
+    margin-right: 20px; /* Add space between image and text */
+  }
+
+  .movie-info {
+    flex-grow: 1; /* Allow text to take remaining width */
+  }
 }
 </style>

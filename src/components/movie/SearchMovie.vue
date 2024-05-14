@@ -24,7 +24,10 @@ export default {
     };
   },
   props: {
-    showButton: true
+    showButton: {
+      type: Boolean,
+      default: true // Default value corrected
+    },
   },
   methods: {
     ...mapActions(['fetchGenres']),
@@ -87,5 +90,22 @@ export default {
 .search-button:hover {
   transform: scale(1.05);
   transition: transform 0.3s;
+}
+
+/* Media Query for Responsive Layout */
+@media screen and (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input, .genre-select, .year-input, .search-button {
+    margin: 8px 0;
+    width: 100%;
+  }
+
+  .search-button {
+    margin-top: 8px;
+  }
 }
 </style>
