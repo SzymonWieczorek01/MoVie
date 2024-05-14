@@ -91,6 +91,7 @@ export default {
   background-color: #FFFFFF; /* White background for a clean look */
   color: #000000; /* Black text for high contrast and visibility */
   text-align: center;
+  background: linear-gradient(to top, #887ae34b, #FFFFFF,  #887ae315, #FFFFFF, #FFFFFF);
 }
 
 .header h1, .header p {
