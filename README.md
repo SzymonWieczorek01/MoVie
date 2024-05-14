@@ -14,29 +14,29 @@
 > Aplikacja umożliwiająca użytkownikom tworzenie swojej kolekcji ulubionych filmów. Użytkownicy mają możliwość dodawania nowych pozycji, oceniania ich, dodawania recenzji i szukania konkretnych filmów.
 ### Widoki:
 
-#### 1. Strona logowania
-- Umożliwia użytkownikom zalogowanie się do swojego konta.
+#### 1. Widok Home
+- Wita użytkownika na stronie oraz prezentuje rekomendowane filmy.
 
-#### 2. Strona rejestracji
-- Pozwala użytkownikom na utworzenie nowego konta w aplikacji.
+#### 2. Widok Login
+- Umożliwia użytkownikom zalogowanie się do swojego konta. Dostępne logowanie za pomocą Google.
 
-#### 3. Widok informacji o filmie
+#### 3. Widok SignUp
+- Pozwala użytkownikom na utworzenie nowego konta w aplikacji za pomocą formularza.
+
+#### 4. Widok MovieItem
 - Prezentuje szczegółowe informacje na temat wybranego filmu, takie jak tytuł, rok produkcji, ocena, recenzje itp.
 
-#### 4. Zapisane filmy
+#### 5. Widok SavedMovies
 - Pozwala użytkownikom przeglądać i zarządzać swoimi zapisanymi filmami.
 
-#### 5. Strona użytkownika
-- Wyświetla profil użytkownika z informacjami o kolekcji filmów, recenzjach itp.
+#### 6. Widok Profile
+- Wyświetla profil użytkownika z informacjami o kolekcji filmów i recenzjach.
 
-#### 6. Strona główna
-- Prezentuje użytkownikom rekomendowane filmy, nowości oraz popularne pozycje.
+#### 7. Widok MovieSwipeMenu
+- Pozwala użytkownikom przeglądać filmy w interaktywny sposób poprzez lajkowanie ich lub odrzucanie.
 
-#### 7. Menu przesuwane dla filmów
-- Pozwala użytkownikom przeglądać filmy w interaktywny sposób poprzez przesuwanie w prawo lub lewo.
-
-#### 8. Wyszukiwarka filmów
-- Umożliwia użytkownikom wyszukiwanie filmów na podstawie tytułu, gatunku, roku produkcji itp.
+#### 8. Widok SearchResults
+- Umożliwia użytkownikom wyszukiwanie filmów na podstawie tytułu, gatunku lub roku produkcji.
 
 ---
 
