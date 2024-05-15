@@ -101,7 +101,7 @@ export default createStore({
   },
   actions: {
     signIn({commit, state}, userCredential){
-      commit("setLoader", true)
+      commit("setLoading", true)
       var email = userCredential.email
       var pass = userCredential.pass
       const auth = getAuth()
@@ -118,11 +118,11 @@ export default createStore({
           state.signInErrorMessage = "Incorrect Credentials!"
         })
         .finally(() => {
-          commit("setLoader", false)
+          commit("setLoading", false)
         });
     },
     createUser({commit, state}, userCredential){
-      commit("setLoader", true)
+      commit("setLoading", true)
       var email = userCredential.email
       var pass = userCredential.pass
       const auth = getAuth()
@@ -141,7 +141,7 @@ export default createStore({
       .catch((error) => {
         state.signUpErrorMessage = "Incorrect Email or Password!"
       }).finally(() => {
-        commit("setLoader", false)
+        commit("setLoading", false)
       });
     },
     getUserSavedMovies({commit, state}) {
