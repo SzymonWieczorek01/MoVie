@@ -82,7 +82,6 @@ export default {
   margin: 0;
   padding: 0;
   display: flex;
-  box-shadow: 2px 20px 100px #887AE3, 10px 5px 8px #887ae381, 15px 15px 8px #887ae33b;
   justify-content: space-between;
 }
 
