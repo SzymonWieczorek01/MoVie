@@ -1,5 +1,5 @@
 <template>
-  <div class="movie-card">
+  <div class="movie-card" :class="{'swipe-out': swipeOut, 'swipe-in': swipeIn}">
     <div class="poster-wrapper">
       <img v-bind:src="'https://image.tmdb.org/t/p/w500'+movie.poster_path" alt="Movie Poster" class="movie-poster" />
     </div>
@@ -36,7 +36,9 @@ export default {
   name: 'MovieCard',
   data() {
     return {
-      showModal: false
+      showModal: false,
+      swipeOut: false,
+      swipeIn: false,
     }
   },
   props: {
@@ -68,13 +70,13 @@ export default {
     },
     submitOpinion () {
       this.showModal = false;
-      this.$emit("swipe");
+      this.startSwipeOutAnimation();
     },
     pushDislikedMovieToDB(){
       addDoc(collection(this.fireStore, "disliked_movies"), this.parsedMovieData)
       .then((doc) => {
         this.$store.commit("setUserDislikedMovies", this.movie.id);
-        this.$emit("swipe");
+        this.startSwipeOutAnimation();
       });
     },
     pushSavedMovieToDb(){
@@ -82,9 +84,23 @@ export default {
         .then((doc) => {
           this.parsedMovieData['dbId'] = doc.id;
           this.$store.commit("setUserSavedMovies", this.parsedMovieData);
-          this.$emit("swipe");
+          this.startSwipeOutAnimation();
         });
     },
+    startSwipeOutAnimation() {
+      this.swipeOut = true;
+      setTimeout(() => {
+        this.swipeOut = false;
+        this.startSwipeInAnimation();
+      }, 500); 
+    },
+    startSwipeInAnimation() {
+      this.swipeIn = true;
+      this.$emit("swipe");
+      setTimeout(() => {
+        this.swipeIn = false;
+      }, 500); 
+    }
   },
 
 };
@@ -191,5 +207,35 @@ export default {
     max-width: 330px;
     padding: 20px;
   }
+}
+
+@keyframes swipeOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.swipe-out {
+  animation: swipeOut 0.5s forwards;
+}
+
+.swipe-in {
+  animation: swipeIn 0.5s forwards;
 }
 </style>
