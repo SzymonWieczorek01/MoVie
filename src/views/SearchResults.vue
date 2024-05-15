@@ -1,14 +1,14 @@
 <template>
 <SearchMovie ref="SearchMovie" :showButton="false" @newQuery="$refs.SearchMovie.updateQuery()"/>
-  <div class="search-and-toggle">
-    <button @click="toggleView" class="toggle-view-button">
+  <button @click="toggleView" class="toggle-view-button">
       <span v-if="asTable">
         <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       </span>
       <span v-else>
         <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="17" width="18" height="4"/></svg>
       </span>
-    </button>
+  </button>
+  <div class="search-and-toggle">
   </div>
   <div>
     <h1 v-if="query">Search Results for {{ query }}</h1>
@@ -203,7 +203,7 @@ export default {
     flex-direction: column;
     align-items: stretch;
   }
-  .SearchMovie, .toggle-view-button {
+  .SearchMovie {
     width: 100%; /* Ensures full width on smaller screens */
     margin-right: 0; /* Adjust margin for mobile layout */
   }

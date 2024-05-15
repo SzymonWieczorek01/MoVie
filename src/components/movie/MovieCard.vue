@@ -101,7 +101,7 @@ export default {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
-  max-width: 280px;
+  max-width: 350px;
   margin: auto;
 }
 
@@ -176,5 +176,20 @@ export default {
 
 .movie-card:hover {
   transform: scale(1.03);
+}
+
+@media (max-width: 800px) {
+  .movie-card {
+    border-radius: 8px;
+    max-width: 220px;
+    padding: 10px;
+  }
+}
+@media (max-width: 1200px) {
+  .movie-card {
+    border-radius: 15px;
+    max-width: 330px;
+    padding: 20px;
+  }
 }
 </style>

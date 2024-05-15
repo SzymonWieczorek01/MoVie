@@ -99,10 +99,12 @@ i {
   color: #4a67d6;
 }
 
-input[type="email"], input[type="password"] {
-  padding: 10px;
+input[type="email"],
+input[type="password"] {
+  padding: 12px; /* Increased padding to extend until the border */
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: calc(100% - 24px); /* Adjusted width to consider padding */
 }
 
 button {

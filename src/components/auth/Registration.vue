@@ -118,20 +118,25 @@ i {
   color: #4a67d6;
 }
 
-input[type="email"], input[type="password"] {
-  padding: 10px;
+input[type="email"],
+input[type="password"] {
+  padding: 12px; /* Increased padding to extend until the border */
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: calc(100% - 24px); /* Adjusted width to consider padding */
 }
 
 button {
   padding: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 500;
   color: white;
-  background-color: #4a67d6;
+  background: linear-gradient(90deg, rgba(213, 149, 255, 0.788) 0.3%, #30345afd 100.05%, #30345a42 100.06%);
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 1s ease;
 }
 
 button:disabled {

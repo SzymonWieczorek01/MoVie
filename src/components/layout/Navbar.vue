@@ -173,15 +173,6 @@ export default {
   justify-content: flex-end;
 }
 
-@media (max-width: 1224px) {
-  .navbar ul {
-    flex-direction: column;
-  }
-  .navbar ul li {
-    margin: 10px 0;
-  }
-}
-
 .navigation .secondary-navigation .user-name a {
   color: #887AE3;
   font-weight: 600;
@@ -192,17 +183,151 @@ export default {
   color: rgb(0, 0, 0);
   font-size: initial;
 }
+@media (max-width: 992px) {
+  .navbar ul {
+    flex-direction: column;
+    padding: 10px 0;
+  }
 
-/* Media Query for Responsive Layout */
-@media (max-width: 1224px) {
+  .navbar ul li {
+    margin: 5px 0;
+  }
+
   .button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 10px;
   }
 
   .button-container button {
-    margin-top: 10px;
+    margin: 5px 0;
+    width: 100%;
+  }
+
+  .movie-logo {
+    margin-right: 0; /* Adjust spacing */
+  }
+
+  .movie-swipe,
+  .saved-movies {
+    width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .navbar ul {
+    padding: 10px 0;
+  }
+
+  .navbar ul li {
+    margin: 5px 0;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .button-container button {
+    margin: 5px 0;
+    width: 100%;
+  }
+
+  .movie-logo {
+    margin-right: 0; /* Adjust spacing */
+  }
+
+  .movie-swipe,
+  .saved-movies {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar ul li {
+    margin: 5px 0;
+  }
+
+  .button-container {
+    margin-top: 10px;
+  }
+
+  .button-container button {
+    margin: 5px 0;
+    width: 100%;
+  }
+
+  .movie-swipe,
+  .saved-movies {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .navbar ul {
+    flex-direction: column;
+    padding: 5px 0;
+  }
+
+  .navbar ul li {
+    margin: 5px 0;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .button-container button {
+    margin: 0 5px;
+    width: auto;
+  }
+
+  .movie-logo {
+    margin-right: auto; /* Adjust spacing */
+  }
+
+  .movie-swipe,
+  .saved-movies {
+    width: auto;
+    margin: 0 5px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar ul {
+    justify-content: space-between;
+  }
+
+  .navbar ul li {
+    margin: 5px;
+  }
+
+  .button-container {
+    margin-top: 0;
+  }
+
+  .button-container button {
+    margin: 0 10px;
+    width: auto;
+  }
+
+  .movie-logo {
+    margin-right: auto;
+  }
+
+  .movie-swipe,
+  .saved-movies {
+    margin: 0 10px;
+    width: auto;
+  }
+}
+
+
 </style>

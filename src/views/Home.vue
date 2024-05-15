@@ -94,13 +94,11 @@ export default {
   background-color: #FFFFFF; /* White background for a clean look */
   color: #000000; /* Black text for high contrast and visibility */
   text-align: center;
-  background: linear-gradient(to top, #887ae375, #FFFFFF,  #887ae315, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF);
 }
 
 .header h1 {
   margin-top: 50px;
   color:rgb(0, 0, 0);
-  text-shadow: 5px 5px 5px #7e24d18c;
 }
 .header h1, .header p {
   transition: opacity 0.3s ease-in-out;
@@ -108,7 +106,7 @@ export default {
 }
 
 .header p {
-  text-align: left;
+  text-align: center;
   color: #000000;
   padding: 0 10%; /* Padding on left and right to prevent text from touching the edge */
 }
